@@ -58,7 +58,39 @@ declare option exist:serialize "method=xhtml media-type=text/html";
     </head>
     <body id="grey-top">
     <div class="section" style="margin:2em;">
-       <h1>Test: Batch Edit Descriptions</h1>
+        <xf:model id="m-search">
+            <!-- Generate new in xquery, populate place-id -->
+            <!-- use xquery to populate info field about place?? -->
+            <xf:instance id="i-search">
+                <root xmlns="">
+                    <q/>
+                    <element>persName</element>
+                </root>
+            </xf:instance>
+            <xf:instance xmlns="http://www.tei-c.org/ns/1.0" id="i-results">
+                <results>
+                    <TEI>
+                        <persName ref="http://syriaca.org/person/">Enter search</persName>
+                    </TEI>
+                </results>
+            </xf:instance>
+            <!-- the search results are loaded into this instance -->
+             <xf:instance xmlns="http://www.tei-c.org/ns/1.0" id="i-selected">
+                <results>
+                    <TEI>
+                        <persName ref=""></persName>
+                    </TEI>
+                </results>
+            </xf:instance>
+
+            <xf:submission id="s1" method="get" replace="instance" instance="i-results" serialization="none" mode="synchronous">
+                <xf:resource value="concat('../services/controlled-vocab-search.xql?element=',element,'&amp;','q=',q,'*')"/>
+            </xf:submission>
+            <!-- this puts the cursor in the search field when the form loads -->
+            <!--<xf:setfocus ev:event="xforms-ready" control="q"/>-->
+            <xf:bind id="ref-value" readonly="false()" nodeset="instance('i-selected')/tei:TEI/child::*" calculate="instance('i-results')/tei:TEI/child::*[@ref = instance('i-selected')/tei:TEI/child::*/@ref]/text()"></xf:bind>
+        </xf:model>
+        <h1>Test: Batch Edit Descriptions</h1>
         <div id="element-menu" style="width:250px; position:fixed; background-color:white; padding:0; margin:2em 0;">
         <h3><a href="#" id="btnRange">Display Range</a> | <a href="#" id="btnMark">Mark Range</a></h3>
             <ul class="list-group">
