@@ -1,0 +1,126 @@
+/* Application styles could go here */
+/*
+ * Colors:
+ * Dark red: 753C28
+ * Dark orange: B3522B
+ * Light orange: E69849
+ * Pale tan: F5F2E9
+ * Dark Blue: 456889
+ * Blue/grey: A2B1B9
+ * Light Blue: DDEAF1
+ * Dark Grey #333
+ * Light Grey (text): #999
+ */
+ 
+body{
+    font-family:arial, sans-serif;
+    margin-left:2em;
+    margin-top:2em;
+    padding:4em;
+}
+
+/* XSLT Forms styles */
+#xsltforms_debug {display:none;}
+.xforms-label {display:inline; padding-right:1em;}
+.xforms-select option{width: 40em;}
+
+/* body of xform */
+#xforms{
+    margin:20px;
+    padding:20px;
+    background:white;
+}
+
+.select-group {margin-left: 1em; border-left: 1px solid #ccc; padding-left:1em; margin-bottom:2em;}
+
+.input-md input.xforms-value{width:30em;}
+
+.horiz-tab-menu {margin:1em 0;}
+
+.horiz-tab-menu .tabs{
+    margin-top:1em;
+    border:2px white solid;
+    font-weight:bold;
+    margin-right:0;
+    margin-left:0;
+    padding:1em;
+}
+.horiz-tab-menu .tabs .edit .xfValue{
+    color:white !important;
+}
+.horiz-tab-menu .edit{
+    background-color:#ccc;
+}
+.horiz-tab-menu .edit:before{
+    font-family:"Glyphicons Halflings";
+    content:"\270f";
+    padding-right:1em;
+    background-color:#ccc;
+    /*color:white;*/
+}
+.horiz-tab-menu .view{
+    background-color:#eee;
+}
+.horiz-tab-menu .view:before{
+    font-family:"Glyphicons Halflings";
+    content:"\e105";
+    padding-right:1em;
+    background-color:#eee;
+    /*color:white;*/
+}
+/* View/Edit tab panel */
+.tab-panel {margin-bottom:1.5em;}
+.tab-panel .edit{
+    border-top:.5em #ccc solid;
+    background-color:white;
+    margin-top:0;
+    padding-top:1em;
+    padding-left:1em;
+}
+.tab-panel .view{
+    border-top:.5em #eee solid;
+    background-color:white;
+    margin-top:0;
+    padding-top:1em;
+    padding-left:1em;
+}
+.tab-panel .add{
+        
+}
+
+.view .xfSelectedCase{
+    margin:0;
+    border:2px #ccc solid;
+    background-color:#eee;
+    padding:2em;
+}
+.inline-repeat{
+    display:block;
+    clear:both;
+}
+.inline-repeat .xfControl{
+    padding-right:1em;
+    padding-bottom:.25em;
+}
+/* Controls */
+.add a:before{
+    font-family:"Glyphicons Halflings";
+    content:"\e081";
+    color:#81c348;
+}
+.remove a:before{
+    font-family:"Glyphicons Halflings";
+    content:"\e083";
+    color:red;
+}
+.input-sm input{
+    width:10em;
+}
+.input-md input{
+    width:20em;
+}
+.input-lg input{
+    width:30em;
+}
+
+.xfRepeatIndex{background-color:white !important; padding:.5em;}
