@@ -77,8 +77,6 @@ declare function local:options(){
     </options>
 };
 
-<p>Hello, this works</p>
-(:
+
 if($q != '') then local:search-name()
 else ()
-:)

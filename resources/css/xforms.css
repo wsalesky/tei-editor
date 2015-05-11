@@ -24,6 +24,11 @@ body{
 .xforms-label {display:inline; padding-right:1em;}
 .xforms-select option{width: 40em;}
 
+body .modal-dialog{
+/* new custom width */
+    width: 950px;
+}
+
 /* body of xform */
 #xforms{
     margin:20px;
