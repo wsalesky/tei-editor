@@ -20,7 +20,7 @@ body{
 }
 
 /* XSLT Forms styles */
-#xsltforms_debug {display:none;}
+/*#xsltforms_debug {display:none;}*/
 .xforms-label {display:inline; padding-right:1em;}
 .xforms-select option{width: 40em;}
 

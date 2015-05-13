@@ -25,11 +25,6 @@ declare namespace xf="http://www.w3.org/2002/xforms";
 :
 : Adapted for use with teian and syriaca.org tei records
 : @author Winona Salesky
-
-        <link rel="stylesheet" type="text/css" href="/db/apps/shared-resources/resources/css/bootstrap-3.0.3.min.css"/>
-        <!-- Latest compiled and minified CSS -->
-        <script type="text/javascript" src="resources/scripts//jquery-1.7.1.min.js"/>
-        <script type="text/javascript" src="resources/scripts/bootstrap-3.0.3.min.js"/>
 :)
 declare function local:insert-element($node as node()?, $new-node as node(), 
     $element-name-to-check as xs:string, $location as xs:string) { 
