@@ -46,13 +46,11 @@ let $form-doc :=
 	   <script type="text/javascript" charset="utf-8" src="../resources/scripts/annotator.js">/**/</script>
     <!--    <script type="text/javascript" charset="utf-8" src="teian.js">/**/</script>-->
         
-	<!--dependencies for kyer
+	<!--dependencies for kyer -->
         <link rel="stylesheet" type="text/css" href="http://kyer.sourceforge.net/latest/core/kyer.css"/>
         <script type="text/javascript" charset="utf-8" src="http://kyer.sourceforge.net/latest/core/kyer.js">/**/</script>
-		-->
-	<!--dependencies for simpath
+	<!--dependencies for simpath -->
         <script type="text/javascript" charset="utf-8" src="http://simpath.sourceforge.net/latest/core/simpath.js">/**/</script>
-        -->
 	<!--dependencies for rangy-->
         <script type="text/javascript" charset="utf-8" src="http://rangy.googlecode.com/svn/trunk/currentrelease/rangy-core.js">/**/</script>
         <script type="text/javascript" charset="utf-8" src="http://rangy.googlecode.com/svn/trunk/currentrelease/rangy-selectionsaverestore.js">/**/</script>
@@ -177,9 +175,7 @@ let $form-doc :=
                     </xf:trigger>
                     <!-- Add selected results to record -->
                     <!-- NOTE: need js to insert back into appropriate place -->
-                    <xf:trigger appearance="minimal" class="tabs add">
-                        <xf:label> Add to Document </xf:label>
-                    </xf:trigger>
+                    <a href="#" id="save-selected">save selected</a>
                 </xf:group>
                 <xf:switch id="review" class="tab-panel">
                     <xf:case id="view-selected" selected="true()">
@@ -195,7 +191,7 @@ let $form-doc :=
                     </xf:case>
                     <xf:case id="edit-selected">
                         <xf:group class="edit">
-                            <xf:input ref="instance('i-selected')/tei:TEI/child::*" class="input-md">
+                            <xf:input ref="instance('i-selected')/tei:TEI/child::*" class="input-md" incremental="true">
                                 <xf:label class="inline">Name: </xf:label>
                             </xf:input>
                         </xf:group>

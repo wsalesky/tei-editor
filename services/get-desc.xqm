@@ -57,6 +57,7 @@ declare function desc:build-list-tei(){
     for $desc in collection('/db/apps/srophe-data/data/persons/tei/')//tei:note[parent::tei:person][not(empty(child::*))]
     let $id := $desc/parent::tei:person/tei:idno[starts-with(.,'http://syriaca.org')] (:substring-after(substring-before($desc/parent::tei:person/@xml:id,'-'),'person'):)
     let $title := $desc/ancestor::tei:TEI/descendant::tei:title[1]
+    order by $title
     return 
     <div class="section">
         <TEI xmlns="http://www.tei-c.org/ns/1.0" xml:lang="en">
