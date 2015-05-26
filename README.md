@@ -9,7 +9,7 @@ Personal notes on some of the xml webbased editing tools I have looked at in the
 
 ##TEI
 ####TEILiteEditor
-Javascript and XSLTForms to add support for mixed content editing. 
+Javascript and XSLTForms to add support for mixed content editing. Based on an earlier version of Teian, works with xsltforms.
 
 Code: [https://github.com/jdickie/TEILiteEditor]
 
