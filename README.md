@@ -15,7 +15,7 @@ Code: [https://github.com/jdickie/TEILiteEditor]
 
 Credit: 
 
-Notes: This project is the closest to what we are hoping to get working. So far still debugging the demo. It uses a CKEditor plugin to add TEI tags as classes to html:span elements, spans get translated back to TEI. 
+Notes: This project is the closest to what we are hoping to get working. So far still debugging the demo. It uses a CKEditor plugin to add TEI tags as classes to html:span elements, spans get translated back to TEI. NOTE, apparently this is an early version of Teiann. 
 
 ####Teiann
 Javascript and XSLT for editing/annotating complex TEI records. 
@@ -47,7 +47,7 @@ A javascript based TEI editor. BETA - not supported.
 
 Code: [https://github.com/Islandora/islandora_tei_editor]
 
-Notes: Untested. 
+Notes: Untested. Seems to be an early version of CWRC Editor (above)
 
 ####ANGLES
 A lightweight, online XML editor. 
