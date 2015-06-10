@@ -40,7 +40,7 @@ Code: [https://github.com/cwrc/CWRC-Writer]
 
 Credit: [https://github.com/cwrc]
 
-Notes: Looks interesting from the demo and documentation, have not yet tried to install and test the code. 
+Notes: Looks interesting from the demo and documentation, have not yet tried to install and test the code. Additional documentation can ve found here: [https://sites.google.com/site/cwrcwriterhelp/home]
 
 ####Islandora TEI editor
 A javascript based TEI editor. BETA - not supported.
