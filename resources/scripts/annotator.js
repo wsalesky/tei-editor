@@ -36,7 +36,7 @@ function teiFormsJS() {
         el = xf_getNode(el, 'root/element').textContent;
         
         var contentNew = xf_getInstance('m-search', 'i-selected');
-        contentNew = xf_getNode(contentNew, 'tei:results/tei:TEI/tei:persName');
+        contentNew = xf_getNode(contentNew, 'tei:results/tei:TEI/tei:persName').cloneNode(true);
         
         var sel = rangy.getSelection();
         var savedSel = rangy.saveSelection();
@@ -49,6 +49,9 @@ function teiFormsJS() {
         }
         /*alert(JSON.stringify(ins.documentElement, null, 4));*/
         $('#vocabModal').modal('hide');
+        xf_resetInstance('m-search', 'i-search');
+        xf_resetInstance('m-search', 'i-selected');
+        xf_resetInstance('m-search', 'i-results');
         /* also need to clear form, reset */
         console.log(el);
         console.log(contentNew);
@@ -79,6 +82,18 @@ function xf_changeNode(node, value) {
     document.getElementById(XsltForms_browser.getMeta(node.ownerDocument.documentElement, "model")).xfElement.addChange(node);
     XsltForms_browser.debugConsole.write("Setvalue " + node.nodeName + " = " + value);
     XsltForms_globals.closeAction("XsltForms_change");
+}
+
+function xf_resetInstance(modelId, instanceId){
+   var model = window.document.getElementById(modelId);
+   var doc = model.getInstanceDocument(instanceId);
+   // Update XForms instance using XSLTForms methods
+   XsltForms_globals.openAction();
+   //Reset instance     
+   model.reset(doc); 
+   // Must refresh the form
+   XsltForms_globals.refresh();
+   XsltForms_globals.closeAction(); 
 }
 
 /* XSLTForms dispatch event - user defined events */

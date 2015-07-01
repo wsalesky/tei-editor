@@ -105,7 +105,8 @@ let $form-doc :=
             </xf:action>
             
             <!-- Binds persName/placeName to selected element -->
-            <xf:bind id="ref-value" readonly="false()" nodeset="instance('i-selected')/tei:TEI/child::*" calculate="instance('i-results')/tei:TEI/child::*[@ref = instance('i-selected')/tei:TEI/child::*/@ref]/text()"></xf:bind>
+            <!--<xf:bind id="ref-value" readonly="false()" nodeset="instance('i-selected')/tei:TEI/child::*" calculate="instance('i-results')/tei:TEI/child::*[@ref = instance('i-selected')/tei:TEI/child::*/@ref]/text()"></xf:bind>-->
+            
         </xf:model>
         <h1>Test: Batch Edit Descriptions</h1>
         <!-- Annotations menu -->
@@ -162,6 +163,14 @@ let $form-doc :=
                         <xf:label ref="child::*"/>
                         <xf:value ref="child::*/@ref"/>
                     </xf:itemset>
+                    <!-- Insert selected element into i-selected, delete place holder node -->
+                    <xf:action ev:event="xforms-value-changed">
+                        <xf:insert context="instance('i-selected')/tei:TEI/child::*" 
+                            ref="instance('i-selected')/tei:TEI/child::*[last()]" 
+                            at="last()"  position="after" 
+                            origin="instance('i-results')/tei:TEI/child::*[@ref = instance('i-selected')/tei:TEI/child::*/@ref]"/>
+                        <xf:delete ref="instance('i-selected')/tei:TEI/child::*[1]"/>
+                    </xf:action>
                 </xf:select1>
             <!-- Edit Results -->                
                 <xf:group class="horiz-tab-menu" ref="instance('i-selected')/tei:TEI/child::*">

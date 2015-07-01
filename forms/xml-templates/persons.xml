@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="http://syriaca.org/documentation/syriaca-tei-main.rnc" type="application/relax-ng-compact-syntax"?>
+<TEI xmlns="http://www.tei-c.org/ns/1.0" xmlns:saxon="http://saxon.sf.net/" xmlns:functx="http://www.functx.com" xmlns:xd="http://www.oxygenxml.com/ns/doc/xsl" xml:lang="en">
+    <teiHeader>
+        <fileDesc>
+            <titleStmt>
+                <title/>
+            </titleStmt>
+            <editionStmt>
+                <edition n="1.0"/>
+            </editionStmt>
+            <publicationStmt>
+                <authority>Syriaca.org: The Syriac Reference Portal</authority>
+                <idno type="URI">http://syriaca.org/person/10/tei</idno>
+                <availability>
+                    <licence target="http://creativecommons.org/licenses/by/3.0/">
+                        <p>Distributed under a Creative Commons Attribution 3.0 Unported License.</p>
+                    </licence>
+                </availability>
+                <date>2014-10-15-04:00</date>
+            </publicationStmt>
+            <sourceDesc>
+                <p>Born digital.</p>
+            </sourceDesc>
+        </fileDesc>
+    </teiHeader>
+    <text>
+        <body>
+            <listPerson>
+                <person xml:id="person-x" ana="#syriaca-author">
+                    <persName xml:id="namex-1" xml:lang="xx" source="#bibx-1" syriaca-tags="#syriaca-headword">
+                        <forename sort="1"/>
+                    </persName>
+                    <persName xml:id="name10-2" corresp="#x" xml:lang="xx" source="#bibx-2">
+                        <forename sort="1"/>
+                        <addName type="x" sort="2"/>
+                    </persName>
+                    <persName xml:id="namex-x" xml:lang="x" source="#bibx-x"/>
+                    <note type="abstract" xml:id="abstract-en-x">
+                        <quote source="#bibx-1"/>
+                    </note>
+                    <idno type="URI">http://syriaca.org/person/x</idno>
+                    <death when="x" source="#bibx-x" syriaca-computed-start="x"/>
+                    <floruit notBefore="x" notAfter="x" source="#bibx-1"/>
+                    <bibl xml:id="bibx-x">
+                        <title/>
+                    </bibl>
+                </person>
+                <relation name="x" active="#person-x" passive="x" source="#bibx">
+                    <desc xml:lang="en"/>
+                </relation>
+            </listPerson>
+        </body>
+    </text>
+</TEI>

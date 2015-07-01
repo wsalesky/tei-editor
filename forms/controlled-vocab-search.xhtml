@@ -48,7 +48,7 @@
                     </xf:submission>
                     <!-- this puts the cursor in the search field when the form loads -->
                     <!--<xf:setfocus ev:event="xforms-ready" control="q"/>-->
-                    <xf:bind id="ref-value" readonly="false()" nodeset="instance('i-selected')/tei:TEI/child::*" calculate="instance('i-results')/tei:TEI/child::*[@ref = instance('i-selected')/tei:TEI/child::*/@ref]/text()"/>
+                    <!--<xf:bind id="ref-value" readonly="false()" nodeset="instance('i-selected')/tei:TEI/child::*" calculate="instance('i-results')/tei:TEI/child::*[@ref = instance('i-selected')/tei:TEI/child::*/@ref]/text()"/>-->
                 </xf:model>
             </div>
             <!-- List all existing titles -->
@@ -78,11 +78,15 @@
                 </xf:group>
                 <p class="text-muted">*Currently searches persName, placeName and bibl elements in existing records</p>
                 <xf:select1 ref="instance('i-selected')/tei:TEI/child::*/@ref" appearance="full" class="checkbox select-group">
-                    <xf:label/>
                     <xf:itemset ref="instance('i-results')/tei:TEI">
                         <xf:label ref="child::*"/>
                         <xf:value ref="child::*/@ref"/>
                     </xf:itemset>
+                    <!-- Insert selected element into i-selected, delete place holder node -->
+                    <xf:action ev:event="xforms-value-changed">
+                        <xf:insert context="instance('i-selected')/tei:TEI/child::*" ref="instance('i-selected')/tei:TEI/child::*[last()]" at="last()" position="after" origin="instance('i-results')/tei:TEI/child::*[@ref = instance('i-selected')/tei:TEI/child::*/@ref]"/>
+                        <xf:delete ref="instance('i-selected')/tei:TEI/child::*[1]"/>
+                    </xf:action>
                 </xf:select1>
                 <xf:group class="horiz-tab-menu" ref="instance('i-selected')/tei:TEI/child::*">
                     <xf:trigger appearance="minimal" class="tabs view">

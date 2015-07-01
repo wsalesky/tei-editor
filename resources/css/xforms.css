@@ -20,8 +20,8 @@ body{
 }
 
 /* XSLT Forms styles */
-#xsltforms_debug {display:none;}
-.xforms-label {display:inline; padding-right:1em;}
+/*#xsltforms_debug {display:none;}*/
+.xforms-label {display:inline; padding-right:.5em; padding-left:1em;}
 .xforms-select option{width: 40em;}
 
 body .modal-dialog{
@@ -82,6 +82,7 @@ body .modal-dialog{
     padding-top:1em;
     padding-left:1em;
 }
+
 .tab-panel .view{
     border-top:.5em #eee solid;
     background-color:white;
@@ -89,6 +90,7 @@ body .modal-dialog{
     padding-top:1em;
     padding-left:1em;
 }
+
 .tab-panel .add{
         
 }
@@ -127,5 +129,10 @@ body .modal-dialog{
 .input-lg input{
     width:30em;
 }
-
+.lang-switch {display:inline-block;}
 .xfRepeatIndex{background-color:white !important; padding:.5em;}
+/* XSLTForms specific */
+.xforms-textarea {display:block;}
+/*span.xforms-textarea {display:block;} label get wrapped in this as well */
+span.value textarea{display:block; width: 80% !important; margin-left:6em; display:block;}
+/*span.large label{display:inline;}*/
