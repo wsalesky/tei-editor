@@ -1,4 +1,5 @@
 xquery version "3.0";
+
 (:~
  : NOTE: Handle all lookups for controlled vocab. change name
  : Build dropdown list of available resources for citation
@@ -7,15 +8,11 @@ xquery version "3.0";
 declare namespace tei="http://www.tei-c.org/ns/1.0";
 declare namespace request="http://exist-db.org/xquery/request";
 
-(:~
- : Builds xform and populates working instance from build-place-instance.xqm
- : @param $id passed to form for adding data to existing place, if no id new place will be created
- : NOTE need to add 'generate new id function for new records'
-:)
+
 (:forms:build-instance($id):)
 declare variable $id {request:get-parameter('id', '')};
 declare variable $q {request:get-parameter('q', '')};
-declare variable $element {request:get-parameter('element', '')};
+declare variable $element {request:get-parameter('element', 'person')};
 declare variable $action {request:get-parameter('action', '')};
 
 declare variable $data-root := '/db/apps/srophe-data/' ;
@@ -33,7 +30,8 @@ declare function local:build-path() as xs:string*{
 if($element = 'persName') then concat("collection('",$data-root,"data/persons/tei')//tei:persName[parent::tei:person][ft:query(.,'",$q,"',local:options())]") 
 else if($element = 'placeName') then concat("collection('",$data-root,"data/places/tei')//tei:placeName[parent::tei:place][ft:query(.,'",$q,"',local:options())]")
 else if($element = 'bibl') then concat("collection('",$data-root,"data/bibl/tei')//tei:title[ft:query(.,'",$q,"',local:options())]")
-else concat("collection('",$data-root,"data')//tei:",$element,"[ft:query(.,'",$q,"',local:options())]")
+else if($element != '') then concat("collection('",$data-root,"data')//tei:",$element,"[ft:query(.,'",$q,"',local:options())]")
+else concat("collection('",$data-root,"data')//child::*",$element,"[ft:query(.,'",$q,"',local:options())]")
 };
 
 (:
@@ -76,7 +74,6 @@ declare function local:options(){
         <filter-rewrite>yes</filter-rewrite>
     </options>
 };
-
 
 if($q != '') then local:search-name()
 else ()

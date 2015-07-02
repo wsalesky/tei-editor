@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<div xmlns="http://www.w3.org/1999/xhtml" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:xf="http://www.w3.org/2002/xforms">
+    <fieldset class="well">
+        <xf:repeat ref="instance('i-rec')//tei:place/tei:note" id="new-note">
+            <xf:trigger class="btn remove" appearance="minimal">
+                <xf:label/>
+                <xf:delete ev:event="DOMActivate" ref="."/>
+            </xf:trigger>
+            <xf:select1 ref="@type">
+                <xf:label>Type:</xf:label>
+                <xf:item>
+                    <xf:label>--- Select Note Type ---</xf:label>
+                    <xf:value/>
+                </xf:item>
+                <xf:item>
+                    <xf:label>Errata</xf:label>
+                    <xf:value>errata</xf:value>
+                </xf:item>
+                <xf:item>
+                    <xf:label>Corrigenda</xf:label>
+                    <xf:value>corrigenda</xf:value>
+                </xf:item>
+                <xf:item>
+                    <xf:label>Incerta</xf:label>
+                    <xf:value>incerta</xf:value>
+                </xf:item>
+            </xf:select1>
+            <xi:include href="source-attr.xml"/>
+                <!-- Should there be a source? -->
+            <xf:textarea ref="."/>
+        </xf:repeat>
+    </fieldset>
+</div>
