@@ -4,8 +4,22 @@
         <fileDesc>
             <titleStmt>
                 <title level="a" xml:lang="en"/>
+                <title level="m" xml:lang="en">The Syriac Gazetteer</title>
+                <sponsor>Syriaca.org: The Syriac Reference Portal</sponsor>
+                <funder>The National Endowment for the Humanities</funder>
+                <funder>The International Balzan Prize Foundation</funder>
+                <principal>David A. Michelson</principal>
+                <editor role="general" ref="http://syriaca.org/documentation/editors.xml#tcarlson">Thomas A. Carlson</editor>
+                <editor role="general" ref="http://syriaca.org/documentation/editors.xml#dmichelson">David A. Michelson</editor>
+                <editor role="creator" ref="http://syriaca.org/documentation/editors.xml#tcarlson">Thomas A. Carlson</editor>
+                <editor role="creator" ref="http://syriaca.org/documentation/editors.xml#dmichelson">David A. Michelson</editor>
             </titleStmt>
+            <editionStmt>
+                <edition n="1.0"/>
+            </editionStmt>
             <publicationStmt>
+                <authority>Syriaca.org: The Syriac Reference Portal</authority>
+                <idno type="URI">temp/tei</idno>
                 <date/>
             </publicationStmt>
             <sourceDesc>
@@ -43,28 +57,8 @@
             <listPlace>
                 <place xml:id="place-XXX" type="TYPE">
                     <!--Must include 1 english name place type -->
-                    <placeName xml:id="nameXXX-X" xml:lang="" source="#bibXX-X"/>           
-                    <!-- bibl also save to bible data folder? -->
-                    <desc xml:lang="">
-                        <quote source="#bibXXX-X">Description</quote>
-                    </desc>
-                    <!-- events bind computed dates at creation able to insert place names -->
-                    <event when="XXXX" source="#bibXXX-X">
-                        <p xml:lang="en"/>
-                    </event>
-                    <!-- attestations -->
-                    <event type="attestation" xml:id="attestationXXX-X" source="#bibXX-X">
-                        <p xml:lang="en">description
-                            <title ref="link">Title</title>.
-                        </p>
-<!--                        <link target="#name78-3 #attestation78-1"/>-->
-                    </event>
-                    <!-- confession dropdown?-->
-                    <state type="confession" xml:id="confessionXX-X" ref="http://syriaca.org/confessions.xml#XX" source="#bibXX-X">
-                        <label>XXX</label>
-                    </state>
-                    <!-- notes type dropdown insert place name where needed?-->
-                    <note type="XXX"/>
+                    <placeName xml:id="nameXXX-X" xml:lang="" source="#bibXX-X"/>
+                    <idno type="URI">temp</idno>
                     <bibl xml:id="bibXX-X">
                         <!-- repeatable -->
                         <author>Author</author>
