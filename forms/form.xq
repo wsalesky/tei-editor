@@ -82,4 +82,17 @@ let $dummy := request:set-attribute("betterform.filter.ignoreResponseBody", "tru
 let $xslt-pi := processing-instruction xml-stylesheet {'type="text/xsl" href="/exist/rest/db/apps/xsltforms/xsltforms.xsl"'}
 let $css-pi := processing-instruction css-conversion {'no'}
 let $debug := processing-instruction xsltforms-options {'debug="yes"'}
+(: Server side variables :)
+let $transform := doc('/exist/rest/db/apps/xsltforms/xsltforms.xsl')
+let $params := 
+<parameters>
+   <param name="omit-xml-declaration" value="yes"/>
+   <param name="indent" value="no"/>
+   <param name="media-type" value="text/html"/>
+   <param name="method" value="xhtml"/>
+   <param name="baseuri" value="/exist/rest/db/apps/xsltforms/"/> 
+</parameters>
+
+let $serialization-options := 'method=xml media-type=text/html omit-xml-declaration=yes indent=no'
+
 return ($xslt-pi,$css-pi, $debug, $form-doc)

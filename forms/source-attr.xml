@@ -12,6 +12,12 @@
         <xf:label>add source</xf:label>
         <xf:insert ev:event="DOMActivate" context="." origin="instance('i-template')//*[@source][1]/@source"/>
     </xf:trigger>
-    <!-- Add new source popup (load as subform?) -->
-    <button type="text" class="btn btn-link btn-source" data-toggle="modal" data-target="#modal-source">New source</button>
+    <!-- Add new source popup Use xf:dialog (consider subform?) -->
+    <xf:trigger>
+        <xf:label>New Source</xf:label>
+        <xf:action ev:event="DOMActivate">
+            <xf:show dialog="new-source"/>
+        </xf:action>
+    </xf:trigger>
+    <!--<button type="text" class="btn btn-link btn-source" data-toggle="modal" data-target="#modal-source">New source</button>-->
 </span>

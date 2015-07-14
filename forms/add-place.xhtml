@@ -46,24 +46,78 @@
                             <id>http://syriaca.org/bibl/12</id>
                         </data>
                     </xf:instance>
-                    <xf:submission id="s-load-source" resource="../services/bibl-list.xql" method="get" ref="instance('i-uri')//id" replace="instance" targetref="instance('i-new-bibl')"/>
-                    <!-- Send record to submit.xql, currently just shows xml in browser -->
-                    <xf:submission id="s-save" resource="../services/submit.xql" ref="instance('i-rec')" replace="all" method="post"/>
+                    <xf:instance xmlns="" id="i-view">
+                        <id>http://syriaca.org/bibl/12</id>
+                    </xf:instance>
+                    <xf:instance id="i-save-results">
+                        <data xmlns="">
+                            <message path="/db/apps/srophe-data/data/places/tei/78.xml">Test</message>
+                        </data>
+                    </xf:instance>
 
-                    <!-- this puts the cursor in the search field when the form loads -->
-                    <!--<xf:setfocus ev:event="xforms-ready" control="q"/>-->
-                    <!--<xf:bind id="ref-value" readonly="false()" nodeset="instance('i-selected')/tei:TEI/child::*" calculate="instance('i-results')/tei:TEI/child::*[@ref = instance('i-selected')/tei:TEI/child::*/@ref]/text()"/>-->
-                    <!-- Bind: title m = gazetter or have populated default values, for title and editors? -->
-                    <!-- Bind: title a= title[@syriaca-headword] -->
+                    <!--
+                        <xf:bind ref="instance('i-rec')//tei:idno" calculate="instance('i-new-id')/id/@uri"/>
+                        <xf:bind id="b-rec-date" readonly="false()" nodeset="instance('i-rec')/tei:TEI/tei:teiHeader/tei:publicationStmt/tei:date" calculate="now()"/>-->
+                    
+                    <!-- Uses new id passed from initialize.xhtml -->
+                    <!-- Will have to be different for editing an existing record.  -->
+                    <xf:action ev:event="xforms-ready">
+                        <xf:setvalue ref="instance('i-rec')//tei:idno[@type='URI']" value="instance('i-new-id')/id/@uri"/>
+                    </xf:action>
+                    <!-- Bind title to place names -->
+                    <!-- Will need to bind to only syriaca headwords headwords option will need to be added to tei:placeName input file -->
+                    <xf:bind ref="instance('i-rec')//tei:teiHeader/tei:fileDesc/tei:titleStmt/tei:title[@level='a']" calculate="instance('i-rec')//tei:place/tei:placeName[1]"/>
+                    <!-- Bind tei:date to record create date.  -->
+                    <!-- May need to add a change element? -->
+                    <xf:bind id="b-rec-date" readonly="false()" nodeset="instance('i-rec')/tei:TEI/tei:teiHeader/tei:publicationStmt/tei:date" calculate="now()"/>
+                    <!-- Set required values Currently only requires placeName -->
+                    <xf:bind ref="instance('i-rec')//tei:place/tei:placeName" required="true()"/>
+                   
+                    <!-- Submissions -->
+                    <!--<xf:resource value="'opener://i-rec/child::*'"/>
+                        Send record to submit.xql, currently just shows xml in browser -->
+                    <!--<xf:submission id="s-save" resource="../services/submit.xql" ref="instance('i-rec')" replace="all" method="post"/>-->
+                    <!-- <xf:output value="serialize(instance('i-rec'),'yes')"/> -->
+                    <!--
+                    <xf:submission id="s-save" ref="instance('i-rec')" resource="../services/submit.xql" replace="none" method="post">
+                        <xf:load ev:event="xforms-submit-done" show="new">
+                            <xf:resource value="concat('opener://',instance('i-rec'))"/>
+                        </xf:load>
+                    </xf:submission>
+                    -->
+                    <xf:submission id="s-view-saved" method="get" replace="none" instance="i-rec">
+                        <xf:submit submission="s-save">
+                            <xf:load ev:event="xforms-submit-done" show="new">
+                                <xf:resource value="concat('../services/view-rec.xql?path=',instance('i-save-results')//message/@path)"/>
+                            </xf:load>
+                        </xf:submit>
+                    </xf:submission>
+                    <xf:submission id="s-save" resource="../services/submit.xql" ref="instance('i-rec')" replace="i-save-results" method="post">
+                        <xf:action ev:event="xforms-submit-done">
+                            <xf:message>Saved</xf:message>
+                        </xf:action>
+                        <xf:action ev:event="xforms-submit-error">
+                            <xf:message>Save Failed</xf:message>
+                        </xf:action>
+                    </xf:submission>
+                    <xf:submission id="s-load-source" resource="../services/bibl-list.xql" method="get" ref="instance('i-uri')//id" replace="instance" targetref="instance('i-new-bibl')"/>
                 </xf:model>
             </div>
             <!-- List all existing titles -->
             <div class="section">
+                <!-- Work in progress -->
                 <xf:submit class="btn btn-default pull-right" submission="s-save" appearance="minimal">
-                    <xf:label>Save</xf:label>
+                    <xf:label>Save to Database</xf:label>
                 </xf:submit>
+                <xf:submit class="btn btn-default pull-right" submission="s-view-saved" appearance="minimal">
+                    <xf:label>View/Download XML</xf:label>
+                </xf:submit>
+                    <!--<p class="code"><xf:output value="serialize(instance('i-rec'),'yes')"/></p>-->
                 <h1>Create New Gazetteer Record</h1>
                 <p class="text-muted">Instructions, best practices, could be a modal pop up.</p>
+                <xf:output ref="instance('i-rec')//tei:place/tei:idno[@type='URI']">
+                    <xf:label>Syriaca.org URI:</xf:label>
+                </xf:output>
                 <xf:group ref="instance('i-rec')//tei:place">
                     <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
                         <div class="panel panel-default">
@@ -86,8 +140,8 @@
                             <div class="panel-heading" role="tab" id="headingTwo">
                                 <h4 class="panel-title">
                                     <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                    Description
-                                </a>
+                                        Description
+                                    </a>
                                 </h4>
                             </div>
                             <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
@@ -104,8 +158,8 @@
                             <div class="panel-heading" role="tab" id="headingThree">
                                 <h4 class="panel-title">
                                     <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                                    Location
-                                </a>
+                                        Location
+                                    </a>
                                 </h4>
                             </div>
                             <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
@@ -127,8 +181,8 @@
                             <div class="panel-heading" role="tab" id="headingFour">
                                 <h4 class="panel-title">
                                     <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
-                                    Events
-                                </a>
+                                        Events
+                                    </a>
                                 </h4>
                             </div>
                             <div id="collapseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFour">
@@ -145,8 +199,8 @@
                             <div class="panel-heading" role="tab" id="headingFive">
                                 <h4 class="panel-title">
                                     <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
-                                    Attestations
-                                </a>
+                                        Attestations
+                                    </a>
                                 </h4>
                             </div>
                             <div id="collapseFive" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFive">
@@ -163,8 +217,8 @@
                             <div class="panel-heading" role="tab" id="headingSix">
                                 <h4 class="panel-title">
                                     <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseSix" aria-expanded="false" aria-controls="collapseSix">
-                                    Confessions    
-                                </a>
+                                        Confessions    
+                                    </a>
                                 </h4>
                             </div>
                             <div id="collapseSix" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingSix">
@@ -183,8 +237,8 @@
                             <div class="panel-heading" role="tab" id="headingSeven">
                                 <h4 class="panel-title">
                                     <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseSeven" aria-expanded="false" aria-controls="collapseSeven">
-                                    Notes
-                                </a>
+                                        Notes
+                                    </a>
                                 </h4>
                             </div>
                             <div id="collapseSeven" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingSeven">
@@ -201,12 +255,12 @@
                             <div class="panel-heading" role="tab" id="headingEight">
                                 <h4 class="panel-title">
                                     <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseEight" aria-expanded="false" aria-controls="collapseEight">
-                                    Sources
-                                </a>
+                                        Sources
+                                    </a>
                                 </h4>
                             </div>
                             <div id="collapseEight" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingEight">
-                            <!-- Review and delete bibl records -->
+                                <!-- Review and delete bibl records -->
                                 <div class="panel-body">
                                     <xf:repeat ref="instance('i-rec')//tei:place/tei:desc" id="source-view">
                                         <xf:trigger appearance="minimal" class="btn remove">
@@ -236,26 +290,24 @@
                             </div>
                         </div>
                     </div>
-                    <div class="modal fade modal-bibl" id="modal-source" tabindex="-1" role="dialog" aria-labelledby="modal-source-label" aria-hidden="true">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h4 class="modal-title">Add New Source:</h4>
-                                </div>
-                                <div class="modal-body">
-                                    <xi:include href="bibl-lookup.xml"/>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                    <xf:trigger class="btn btn-default" appearance="minimal">
-                                        <xf:label>Save to record</xf:label>
-                                        <xf:insert ev:event="DOMActivate" context="instance('i-rec')//tei:place" ref="instance('i-rec')//tei:place/child::*" at="last()" position="after" origin="instance('i-new-bibl')"/>
-                                        <xf:message level="modal" ev:event="DOMActivate">Saved!</xf:message>
-                                    </xf:trigger>
-                                </div>
-                            </div>
+                    <xf:dialog id="new-source" class="modal-dialog">
+                        <div class="modal-body">
+                            <xi:include href="bibl-lookup.xml"/>
                         </div>
-                    </div>
+                        <div class="modal-footer">
+                            <xf:trigger class="btn btn-default" appearance="minimal">
+                                <xf:label>Close</xf:label>
+                                <xf:action ev:event="DOMActivate">
+                                    <xf:hide dialog="new-source"/>
+                                </xf:action>
+                            </xf:trigger>
+                            <xf:trigger class="btn btn-default" appearance="minimal">
+                                <xf:label>Save to record</xf:label>
+                                <xf:insert ev:event="DOMActivate" context="instance('i-rec')//tei:place" ref="instance('i-rec')//tei:place/child::*" at="last()" position="after" origin="instance('i-new-bibl')"/>
+                                <xf:message level="modal" ev:event="DOMActivate">Saved!</xf:message>
+                            </xf:trigger>
+                        </div>
+                    </xf:dialog>
                 </xf:group>
             </div>
         </div>

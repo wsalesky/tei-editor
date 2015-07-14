@@ -29,6 +29,27 @@ body .modal-dialog{
     width: 950px;
 }
 
+.modal-body {
+    max-height: 600px;
+    overflow-y: auto;
+}
+
+.xforms-dialog { 
+    /* some styles to position the modal at the center of the page */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 950px !important;
+    min-height: 500px;
+    max-height: 650px;
+    overflow-y: auto;
+    margin-left: -100px;
+    margin-top: -100px;
+    background-color: white;
+    /* needed styles for the overlay #B8CED8*/
+    z-index: 10; /* keep on top of other elements on the page */
+    outline: 9999px solid rgba(184, 206, 216,0.8);
+}
 /* body of xform */
 #xforms{
     margin:20px;
@@ -40,7 +61,7 @@ body .modal-dialog{
 
 .input-md input.xforms-value{width:30em;}
 
-.horiz-tab-menu {margin:1em 0;}
+.horiz-tab-menu {margin:2em 0 .5em 0;}
 
 .horiz-tab-menu .tabs{
     margin-top:1em;
@@ -91,10 +112,7 @@ body .modal-dialog{
     padding-left:1em;
 }
 
-.tab-panel .add{
-        
-}
-
+.xforms-repeat-item {margin-bottom:.5em;}
 .view .xfSelectedCase{
     margin:0;
     border:2px #ccc solid;
@@ -136,3 +154,6 @@ body .modal-dialog{
 /*span.xforms-textarea {display:block;} label get wrapped in this as well */
 span.value textarea{display:block; width: 80% !important; margin-left:6em; display:block;}
 /*span.large label{display:inline;}*/
+
+.indent-form {margin-left:2.5em;}
+.indent {margin-left:1em;}
