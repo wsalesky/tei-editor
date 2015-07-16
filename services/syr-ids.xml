@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <list>
     <div class="work">
-        <id type="work" uri="http://syriaca.org/work/2085" num="2085"/>
+        <id type="work" uri="http://syriaca.org/work/2086" num="2086"/>
     </div>
     <div class="manuscript">
         <id type="manuscript" uri="http://syriaca.org/manuscript/1190" num="1190"/>
     </div>
     <div class="place">
-        <id type="place" uri="http://syriaca.org/place/2595" num="2595"/>
+        <id type="place" uri="http://syriaca.org/place/2596" num="2596"/>
     </div>
     <div class="person">
         <id type="person" uri="http://syriaca.org/person/2162" num="2162"/>
