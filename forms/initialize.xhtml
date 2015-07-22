@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:xf="http://www.w3.org/2002/xforms">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:xf="http://www.w3.org/2002/xforms">
     <head>
         <title>Syriaca.org: Create New Record</title>
         <meta name="author" content="wsalesky at gmail.com"/>
@@ -27,6 +27,11 @@
                     <xf:instance xmlns="" id="i-new-id">
                         <data>
                             <id type="" uri="" num=""/>
+                        </data>
+                    </xf:instance>
+                    <xf:instance xmlns="" id="i-subform">
+                        <data>
+                            <form/>
                         </data>
                     </xf:instance>
                     <xf:instance xmlns="" id="i-sumbission">
@@ -74,6 +79,7 @@
                             <xf:action ev:event="xforms-value-changed">
                                 <xf:setvalue ref="instance('i-new-id')/id/@num" value="instance('i-ids')//id[@type = instance('i-new-id')/id/@type]/@num + 1"/>
                                 <xf:setvalue ref="instance('i-new-id')/id/@uri" value="concat('http://syriaca.org/',instance('i-new-id')/id/@type,'/',instance('i-ids')//id[@type = instance('i-new-id')/id/@type]/@num + 1)"/>
+                                <xf:setvalue ref="instance('i-subform')//form" value="concat(instance('i-new-id')/id/@type,'.xml')"/>
                             </xf:action>
                         </xf:select1>
                         <br/>
@@ -89,7 +95,9 @@
                                 <!-- Trigger, saves new id to syr-ids via increment-uri.xql -->
                                 <!-- Loads new form as subform -->
                                 <xf:action ev:event="DOMActivate">
-                                    <xf:load show="embed" targetid="subform" resource="form.xq?form=add-place.xhtml"/>
+                                    <xf:load show="embed" targetid="subform">
+                                        <xf:resource value="concat( 'form.xq?form=', instance('i-subform')//form/text() )"/>
+                                    </xf:load>
                                     <xf:toggle case="edit-new-rec"/>
                                 </xf:action>
                             </xf:submit>
