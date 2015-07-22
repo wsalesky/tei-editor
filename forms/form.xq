@@ -72,7 +72,7 @@ declare function local:insert-element($node as node()?, $new-node as node(),
              }
          else $node
 };
-
+let $cache := 'Test cache'
 let $form-name := request:get-parameter("form", "")
 let $form-path := $form-name
 let $form-doc := doc($form-path)

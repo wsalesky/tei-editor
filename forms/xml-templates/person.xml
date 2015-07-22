@@ -141,27 +141,8 @@
         <body>
             <listPerson>
                 <person xml:id="person-x" ana="#syriaca-author">
-                    <persName xml:id="namex-1" xml:lang="xx" source="#bibx-1" syriaca-tags="#syriaca-headword">
-                        <forename sort="1"/>
-                    </persName>
-                    <persName xml:id="name10-2" corresp="#x" xml:lang="xx" source="#bibx-2">
-                        <forename sort="1"/>
-                        <addName type="x" sort="2"/>
-                    </persName>
-                    <persName xml:id="namex-x" xml:lang="x" source="#bibx-x"/>
-                    <note type="abstract" xml:id="abstract-en-x">
-                        <quote source="#bibx-1"/>
-                    </note>
-                    <idno type="URI">http://syriaca.org/person/x</idno>
-                    <death when="x" source="#bibx-x" syriaca-computed-start="x"/>
-                    <floruit notBefore="x" notAfter="x" source="#bibx-1"/>
-                    <bibl xml:id="bibx-x">
-                        <title/>
-                    </bibl>
+                    <persName xml:id="namex-1" xml:lang="xx" source="#bibx-1"/>
                 </person>
-                <relation name="x" active="#person-x" passive="x" source="#bibx">
-                    <desc xml:lang="en"/>
-                </relation>
             </listPerson>
         </body>
     </text>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<div xmlns="http://www.w3.org/1999/xhtml" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:xf="http://www.w3.org/2002/xforms">
+<div xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:xf="http://www.w3.org/2002/xforms">
     <fieldset class="well">
-        <xf:repeat ref="instance('i-rec')//tei:place/tei:event[not(@type='attestation')]" id="new-event">
+        <xf:repeat ref="tei:event[not(@type='attestation')]" id="new-event">
             <xf:trigger class="btn remove" appearance="minimal">
                 <xf:label/>
                 <xf:delete ev:event="DOMActivate" ref="."/>

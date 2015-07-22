@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet href="http://localhost:8080/exist/apps/xsltforms/xsltforms.xsl" type="text/xsl"?><?xsltforms-options debug="yes"?><?css-conversion no?><?xml-model href="http://www.oxygenxml.com/1999/xhtml/xhtml-xforms.nvdl" schematypens="http://purl.oclc.org/dsdl/nvdl/ns/structure/1.0"?>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:xf="http://www.w3.org/2002/xforms">
     <head>
         <title>Create New Gazetteer Record</title>
@@ -7,13 +8,14 @@
         <!-- Latest compiled and minified CSS -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css"/>
         <link rel="stylesheet" type="text/css" href="../resources/css/xforms.css"/>
-        <!-- Optional theme -->
+        <!-- Optional theme 
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css"/>
+        -->
         <!-- jquery -->
         <script type="text/javascript" charset="utf-8" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js">/**/</script>
         
         <!-- Latest compiled and minified JavaScript -->
-        <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"/>
+        <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js">/**/</script>
     </head>
     <body class="soria" style="margin:30px;">
         <div>
@@ -27,6 +29,11 @@
                     <!-- Confessions for looking up confessions, perhaps should be a submodule? -->
                     <xf:instance xmlns="" id="i-confessions" src="/exist/apps/srophe/documentation/confessions.xml"/>
                     <xf:instance xmlns="" id="i-bibl" src="../services/bibl-list.xql"/>
+                    <xf:instance xmlns="" id="i-dates">
+                        <tei xmlns="http://www.tei-c.org/ns/1.0">
+                            <tei:date when="" from="" to="" notBefore="" notAfter=""/>
+                        </tei>
+                    </xf:instance>
                     <xf:instance xmlns="" id="i-new-bibl">
                         <bibl xmlns="http://www.tei-c.org/ns/1.0">
                             <ptr target="http://syriaca.org/bibl/"/>
@@ -43,45 +50,32 @@
                     </xf:instance>
                     <xf:instance xmlns="" id="i-uri">
                         <data>
-                            <id/>
+                            <id>http://syriaca.org/bibl/12</id>
                         </data>
                     </xf:instance>
                     <xf:instance xmlns="" id="i-view">
-                        <id/>
+                        <id>http://syriaca.org/bibl/12</id>
+                    </xf:instance>
+                    <xf:instance id="debugger">
+                        <data xmlns="">
+                            <instance>i-view</instance>
+                        </data>
                     </xf:instance>
                     <xf:instance id="i-results">
                         <data xmlns="">
-                            <message path=""/>
+                            <message path="/db/apps/srophe-data/data/new.xml">Test</message>
                         </data>
                     </xf:instance>
-                    
-                    <!-- Uses new id passed from initialize.xhtml -->
-                    <!-- Will have to be different for editing an existing record.  -->
-
-                    <!-- Bind title to place names -->
-                    <!-- Will need to bind to only syriaca headwords headwords option will need to be added to tei:placeName input file -->
-                    <xf:bind ref="instance('i-rec')//tei:teiHeader/tei:fileDesc/tei:titleStmt/tei:title[@level='a']" calculate="instance('i-rec')//tei:place/tei:placeName[1]"/>
-                    <!-- Bind tei:date to record create date.  -->
-                    <!-- May need to add a change element? -->
-                    <xf:bind nodeset="instance('i-rec')/tei:TEI/tei:teiHeader/tei:publicationStmt/tei:date" calculate="now()"/>
-                    <!-- Set required values Currently only requires placeName -->
-                    <!--<xf:bind ref="instance('i-rec')//tei:place/tei:placeName" required="true()"/>-->
-                    <!-- Bind ids -->
-                    <xf:bind ref="instance('i-rec')//tei:idno[@type='URI']" calculate="instance('i-new-id')/id/@uri"/>
-                    <xf:bind ref="instance('i-rec')//tei:placeName/@xml:id" calculate="concat('name',instance('i-new-id')/id/@num,'-',count(instance('i-rec')//tei:placeName) + 1)"/>
-                    <!-- Submissions -->
-                    <!--<xf:resource value="'opener://i-rec/child::*'"/>
-                        Send record to submit.xql, currently just shows xml in browser -->
-                    <!-- <xf:output value="serialize(instance('i-rec'),'yes')"/> -->
-                    <xf:submission id="s-get-view" resource="../services/submit.xql" ref="instance('i-rec')" replace="none" method="post">
-                        <xf:load ev:event="xforms-submit-done" show="new">
-                            <xf:resource value="concat('../services/view-rec.xql?path=',instance('i-new-id')/id/@uri)"/>
-                        </xf:load>
+                    <xf:submission id="s-view-saved" method="get" replace="none" ref="instance('i-rec')">
+                        <!--<xf:submit submission="s-save">
+                            <xf:load ev:event="xforms-submit-done">
+                                <xf:resource value="concat('../services/view-rec.xql?path=',instance('i-save-results')//message/@path)"/>
+                            </xf:load>
+                        </xf:submit>-->
                     </xf:submission>
-                    <xf:submission id="s-save" resource="../services/submit.xql" ref="instance('i-rec')" replace="instance" instance="i-results" method="post">
+                    <xf:submission id="s-save" resource="../services/submit.xql" ref="instance('i-rec')" replace="instance" instance="i-results" method="xml-urlencoded-post">
                         <xf:action ev:event="xforms-submit-done">
-                            <!--<xf:message ref="instance('i-results')//text()"/>-->
-                            <xf:message>Saved!</xf:message>
+                            <xf:message ref="instance('i-results')//text()"/>
                         </xf:action>
                         <xf:action ev:event="xforms-submit-error">
                             <xf:message ref="instance('i-results')//text()"/>
@@ -96,14 +90,14 @@
                 <xf:submit class="btn btn-default pull-right" submission="s-save" appearance="minimal">
                     <xf:label>Save to Database</xf:label>
                 </xf:submit>
-                <xf:submit class="btn btn-default pull-right" submission="s-view-saved" appearance="minimal">
+                <xf:submit class="btn btn-default pull-right" submission="s-get-view" appearance="minimal">
                     <xf:label>View/Download XML</xf:label>
                 </xf:submit>
                 <!--<p class="code"><xf:output value="serialize(instance('i-rec'),'yes')"/></p>-->
                 <h1>Create New Gazetteer Record</h1>
                 <p class="text-muted">Instructions, best practices, could be a modal pop up.</p>
-                <xf:output ref="instance('i-rec')//tei:idno[@type='URI']">
-                    <xf:label>URI:</xf:label>
+                <xf:output ref="instance('i-rec')//tei:place/tei:idno[@type='URI']">
+                    <xf:label>Syriaca.org ID:</xf:label>
                 </xf:output>
                 <xf:group ref="instance('i-rec')//tei:place">
                     <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">

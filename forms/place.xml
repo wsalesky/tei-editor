@@ -26,6 +26,11 @@
                     <xf:instance xmlns="" id="i-template" src="xml-templates/template.xml"/>
                     <!-- Confessions for looking up confessions, perhaps should be a submodule? -->
                     <xf:instance xmlns="" id="i-confessions" src="/exist/apps/srophe/documentation/confessions.xml"/>
+                    <xf:instance xmlns="" id="i-dates">
+                        <tei xmlns="http://www.tei-c.org/ns/1.0">
+                            <tei:date when="" from="" to="" notBefore="" notAfter=""/>
+                        </tei>
+                    </xf:instance>
                     <xf:instance xmlns="" id="i-bibl" src="../services/bibl-list.xql"/>
                     <xf:instance xmlns="" id="i-new-bibl">
                         <bibl xmlns="http://www.tei-c.org/ns/1.0">
@@ -57,7 +62,7 @@
                     
                     <!-- Uses new id passed from initialize.xhtml -->
                     <!-- Will have to be different for editing an existing record.  -->
-
+                    
                     <!-- Bind title to place names -->
                     <!-- Will need to bind to only syriaca headwords headwords option will need to be added to tei:placeName input file -->
                     <xf:bind ref="instance('i-rec')//tei:teiHeader/tei:fileDesc/tei:titleStmt/tei:title[@level='a']" calculate="instance('i-rec')//tei:place/tei:placeName[1]"/>
