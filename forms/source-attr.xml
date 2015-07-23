@@ -10,7 +10,7 @@
     <!-- Add new source attribute if no source attribute -->
     <xf:trigger class="btn add" appearance="minimal" ref="self::*[not(@source)]">
         <xf:label>add source</xf:label>
-        <xf:insert ev:event="DOMActivate" context="." origin="instance('i-template')//*[@source][1]/@source"/>
+        <xf:insert ev:event="DOMActivate" context="." origin="instance('i-source')//tei:source/@source"/>
     </xf:trigger>
     <!-- Add new source popup Use xf:dialog (consider subform?) -->
     <xf:trigger>

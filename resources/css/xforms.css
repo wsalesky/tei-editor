@@ -27,29 +27,34 @@ body{
 body .modal-dialog{
 /* new custom width */
     width: 950px;
+    position:inherit;
 }
 
-.modal-body {
-    max-height: 600px;
+.modal-content {
+    max-height: 650px;
     overflow-y: auto;
 }
 
 .xforms-dialog { 
-    /* some styles to position the modal at the center of the page */
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    width: 950px !important;
-    min-height: 500px;
+    width: 975px !important;
     max-height: 650px;
     overflow-y: auto;
-    margin-left: -100px;
-    margin-top: -100px;
-    background-color: white;
-    /* needed styles for the overlay #B8CED8*/
-    z-index: 10; /* keep on top of other elements on the page */
-    outline: 9999px solid rgba(184, 206, 216,0.8);
 }
+
+div.xforms-dialog {
+    min-height: 500px;
+    max-height: 650px;
+    position: fixed;
+    top: 30% !important;
+    left: 50%;
+	background-color	: transparent;
+	border			: none;
+}
+
+#xforms-dialog-surround {
+	background-color	: grey;
+}
+
 /* body of xform */
 #xforms{
     margin:20px;
@@ -149,6 +154,7 @@ body .modal-dialog{
 }
 .lang-switch {display:inline-block;}
 .xfRepeatIndex{background-color:white !important; padding:.5em;}
+
 /* XSLTForms specific */
 .xforms-textarea {display:block;}
 /*span.xforms-textarea {display:block;} label get wrapped in this as well */

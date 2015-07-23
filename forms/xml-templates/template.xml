@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<TEI xmlns="http://www.tei-c.org/ns/1.0" xmlns:math="http://www.w3.org/1998/Math/MathML" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:svg="http://www.w3.org/2000/svg" xml:lang="en">
+<TEI xmlns:math="http://www.w3.org/1998/Math/MathML" xmlns="http://www.tei-c.org/ns/1.0" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:svg="http://www.w3.org/2000/svg" xml:lang="en">
     <teiHeader>
         <fileDesc>
             <titleStmt>
@@ -58,7 +58,6 @@
                 <place xml:id="place-XXX" type="TYPE">
                     <!--Must include 1 english name place type -->
                     <placeName xml:id="nameXXX-X" xml:lang="en/syr/syr-Syrj/ar" source="bibrefs"/>
-                    <placeName xml:id="nameXXX-X" xml:lang="en/syr/syr-Syrj/ar" source="bibrefs" syriaca-tags="#syriaca-headword"/>
                     <!-- additional descriptions -->
                     <desc xml:lang="en/syr/ar">
                         <quote source="#bibXXX-X"/>
