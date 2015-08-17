@@ -4,7 +4,8 @@ declare namespace html="http://www.w3.org/1999/xhtml";
 declare namespace xf="http://www.w3.org/2002/xforms";
 
 (:~
- : Note need to add app:dir var, and use in configuring css
+ : Used to render xform with xsltforms
+ : Note: need to add app:dir var, and use in configuring css
 :)
 
 (:~

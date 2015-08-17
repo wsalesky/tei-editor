@@ -1,7 +1,7 @@
 xquery version "3.0";
 
 (:~
- : NOTE: Handle all lookups for controlled vocab. change name
+ : NOTE: Handle all lookups for controlled vocab.
  : Build dropdown list of available resources for citation
 :)
 

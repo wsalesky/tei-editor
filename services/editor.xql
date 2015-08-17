@@ -1,5 +1,6 @@
 xquery version "3.0";
 (:~
+ : Test annotation function using rangy library
  : Build dropdown list of available resources for citation
 :)
 

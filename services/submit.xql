@@ -1,7 +1,7 @@
 xquery version "3.0";
 (:~
- : Submit new data to data folder for review
- : Send email alert to appropriate editor?
+ : Handles XForms submission.
+ : Saves data to eXistdb
 :)
 declare namespace request="http://exist-db.org/xquery/request";
 declare namespace tei = "http://www.tei-c.org/ns/1.0";
@@ -12,8 +12,8 @@ declare option output:media-type "text/xml";
 
 (:~
 let $data-root := xs:anyURI('/db/apps/srophe-forms/forms/data/')
-let $cache := 'change value to force refresh: 344'
-let $results := request:get-data()
+let $cache := 'change value to force refresh: 344' 
+let $results := request:get-data()     
 let $file-name := concat('new', '.xml')
 let $path-name := concat($data-root, $file-name)
 '/db/apps/srophe-data/data/'
@@ -22,11 +22,11 @@ let $path-name := concat($data-root, $file-name)
 let $data-root := '/db/apps/srophe-data/data/'
 let $cache := 'change value to force refresh: 344' 
 let $results := request:get-data()
-let $id := replace($results/descendant::tei:idno[@type='URI'][starts-with(.,'http://syriaca.org')][1],'/tei','')
+let $id := $results/descendant::tei:idno[1]
 let $id :=
    if (exists($id))
       then $id
-   else 'data/new.xml'
+   else 'data/new'      
 let $file-name := concat(tokenize($id,'/')[last()], '.xml')
 let $collection := substring-before(substring-after($id,'http://syriaca.org/'),'/')
 let $collection :=
@@ -36,14 +36,14 @@ let $collection :=
     else if($collection = 'manuscript') then concat($data-root,'manuscripts/tei')
     else if($collection = 'work') then concat($data-root,'works/tei')
     else 'data'
-let $path-name :=
-    if(contains($collection, 'place')) then concat($data-root, 'persons/tei/', $file-name)
+let $path-name := 
+    if(contains($collection, 'place')) then concat($data-root, 'places/tei/', $file-name)
     else if(contains($collection, 'person')) then concat($data-root, 'places/tei/', $file-name)
     else if(contains($collection, 'bibl')) then concat($data-root, 'bibl/tei/', $file-name)
     else if(contains($collection,'manuscript')) then concat($data-root, 'manuscripts/tei/', $file-name)
     else if(contains($collection,'work')) then concat($data-root, 'works/tei/', $file-name)
-    else concat('data/', $file-name)
-return
+    else concat('/db/apps/tei-editor/forms/data/', $file-name)
+return 
         try {
         <data code="200">
             <message path="{$path-name}">New document saved: {(xmldb:login('/db/apps','admin',''), xmldb:store($collection, $file-name, $results))}</message>
@@ -51,5 +51,5 @@ return
         } catch * {
         <data code="500">
             <message path="{$path-name}">Caught error {$err:code}: {$err:description}</message>
-        </data>
+        </data>            
         }
