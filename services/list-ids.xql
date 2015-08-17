@@ -1,6 +1,6 @@
 xquery version "3.0";
 (:~
- : Build dropdown list of available resources for citation
+ : Build list of available resources URI for citation
 :)
 
 declare namespace tei="http://www.tei-c.org/ns/1.0";

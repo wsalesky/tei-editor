@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <div xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xf="http://www.w3.org/2002/xforms">
+    <!-- Controlled vocab search as a component -->
     <div style="display:none">
         <xf:model id="m-search">
                     <!-- Generate new in xquery, populate place-id -->
@@ -34,7 +35,7 @@
                     <!--<xf:bind id="ref-value" readonly="false()" nodeset="instance('i-selected')/tei:TEI/child::*" calculate="instance('i-results')/tei:TEI/child::*[@ref = instance('i-selected')/tei:TEI/child::*/@ref]/text()"/>-->
         </xf:model>
     </div>
-            <!-- List all existing titles -->
+     <!-- List all existing titles -->
     <div class="section">
         <h1>Search Controlled Vocabularies</h1>
         <xf:group class="input-md input-group">

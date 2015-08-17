@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <div xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:xf="http://www.w3.org/2002/xforms">
+   <!-- Looks up all available citations prints in a dropdown menu to be added to parent record -->
     <xf:repeat ref="instance('i-uri')//id" id="uri">
         <h4>Select Source form Syriaca.org bibliography:</h4>
         <xf:select1 ref="." incremental="true">

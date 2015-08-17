@@ -7,9 +7,9 @@ declare namespace tei="http://www.tei-c.org/ns/1.0";
 declare namespace request="http://exist-db.org/xquery/request";
 
 (:~
- : Builds xform and populates working instance from build-place-instance.xqm
- : @param $id passed to form for adding data to existing place, if no id new place will be created
- : NOTE need to add 'generate new id function for new records'
+ : Builds populates working instance in requesting form
+ : @param $id passed to form for adding data to existing place
+ : NOTE can remove local:pers-list(), and local:build-persName() as they are better handled by vocab search xquery.
 :)
 (:forms:build-instance($id):)
 declare variable $id {request:get-parameter('id', '')};

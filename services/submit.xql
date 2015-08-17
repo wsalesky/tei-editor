@@ -1,7 +1,7 @@
 xquery version "3.0";
 (:~
- : Submit new data to data folder for review
- : Send email alert to appropriate editor?
+ : Handles XForms submission.
+ : Saves data to eXistdb
 :)
 declare namespace request="http://exist-db.org/xquery/request";
 declare namespace tei = "http://www.tei-c.org/ns/1.0";

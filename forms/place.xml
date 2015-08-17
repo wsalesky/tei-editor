@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:xf="http://www.w3.org/2002/xforms">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:xf="http://www.w3.org/2002/xforms">
     <head>
         <title>Create New Gazetteer Record</title>
         <meta name="author" content="wsalesky at gmail.com"/>
@@ -63,7 +63,7 @@
                     </xf:instance>
                     <xf:instance id="i-results">
                         <data xmlns="">
-                            <message path="">Poke me in the eye!</message>
+                            <message path=""/>
                         </data>
                     </xf:instance>
                     
@@ -76,15 +76,17 @@
                     <!-- Bind ids (Uses new id passed from initialize.xhtml)-->
                     <xf:bind ref="instance('i-rec')//tei:publicationStmt/tei:idno[@type='URI']" calculate="instance('i-new-id')/id/@uri"/>
                     <xf:bind ref="instance('i-rec')//tei:place/tei:idno[@type='URI']" calculate="instance('i-new-id')/id/@uri"/>
-                    <xf:bind ref="instance('i-rec')//tei:placeName/@xml:id" calculate="concat('name',instance('i-new-id')/id/@num,'-',count(instance('i-rec')//tei:placeName))"/>
+                    <!--<xf:bind ref="instance('i-rec')//tei:placeName/@xml:id" calculate="concat('name',instance('i-new-id')/id/@num,'-',count(instance('i-rec')//tei:placeName))"/>-->
                     <!-- Submissions -->
                     <!--<xf:resource value="'opener://i-rec/child::*'"/>
                         Send record to submit.xql, currently just shows xml in browser -->
                     <!-- <xf:output value="serialize(instance('i-rec'),'yes')"/> -->
-                    <xf:submission id="s-get-view" resource="../services/submit.xql" ref="instance('i-rec')" replace="none" method="post">
-                        <xf:load ev:event="xforms-submit-done" show="new">
-                            <xf:resource value="concat('../services/view-rec.xql?path=',instance('i-new-id')/id/@uri)"/>
-                        </xf:load>
+                    <xf:submission id="s-view-saved" resource="../services/submit.xql" ref="instance('i-rec')" replace="none" method="post">
+                        <xf:action ev:event="xforms-submit-done">
+                            <xf:load show="new">
+                                <xf:resource value="concat('../services/view-rec.xql?path=',instance('i-results')//message/@path)"/>
+                            </xf:load>
+                        </xf:action>
                     </xf:submission>
                     <xf:submission id="s-save" resource="../services/submit.xql" ref="instance('i-rec')" replace="instance" instance="i-results" method="post">
                         <xf:action ev:event="xforms-submit-done">
@@ -111,7 +113,7 @@
                 </xf:submit>
                 <!--<p class="code"><xf:output value="serialize(instance('i-rec'),'yes')"/></p>-->
                 <h1>Create New Gazetteer Record</h1>
-                <p class="text-muted">Instructions, best practices, could be a modal pop up.</p>
+                <p class="text-muted">Instructions, best practices.</p>
                 <xf:output ref="instance('i-rec')//tei:place/tei:idno[@type='URI']">
                     <xf:label>URI:</xf:label>
                 </xf:output>

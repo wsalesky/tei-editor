@@ -46,7 +46,7 @@ div.xforms-dialog {
     max-height: 650px;
     position: fixed;
     top: 30% !important;
-    left: 50%;
+    left: 20%;
 	background-color	: transparent;
 	border			: none;
 }

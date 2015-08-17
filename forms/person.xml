@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?xml-stylesheet href="http://localhost:8080/exist/apps/xsltforms/xsltforms.xsl" type="text/xsl"?><?xsltforms-options debug="yes"?><?css-conversion no?><?xml-model href="http://www.oxygenxml.com/1999/xhtml/xhtml-xforms.nvdl" schematypens="http://purl.oclc.org/dsdl/nvdl/ns/structure/1.0"?>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:xf="http://www.w3.org/2002/xforms">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:xf="http://www.w3.org/2002/xforms">
     <head>
         <title>Create New SBD Record</title>
         <meta name="author" content="wsalesky at gmail.com"/>
@@ -26,12 +26,20 @@
                     <xf:instance xmlns="" id="i-rec" src="xml-templates/person.xml"/>
                     <!-- Template used for building optional elements. May be a better way to handle that  -->
                     <xf:instance xmlns="" id="i-template" src="xml-templates/persons-template.xml"/>
-                    <xf:instance xmlns="" id="i-bibl" src="../services/bibl-list.xql"/>
+                    <!-- For inserting date attributes -->
                     <xf:instance xmlns="" id="i-dates">
                         <tei xmlns="http://www.tei-c.org/ns/1.0">
                             <tei:date when="" from="" to="" notBefore="" notAfter=""/>
                         </tei>
                     </xf:instance>
+                    <!-- For inserting source attributes -->
+                    <xf:instance xmlns="" id="i-source">
+                        <tei xmlns="http://www.tei-c.org/ns/1.0">
+                            <tei:source source=""/>
+                        </tei>
+                    </xf:instance>
+                    <!-- For selecting and populating bibl elements -->
+                    <xf:instance xmlns="" id="i-bibl" src="../services/bibl-list.xql"/>
                     <xf:instance xmlns="" id="i-new-bibl">
                         <bibl xmlns="http://www.tei-c.org/ns/1.0">
                             <ptr target="http://syriaca.org/bibl/"/>
@@ -73,21 +81,22 @@
                     <!-- Set required values Currently only requires placeName -->
                     <!--<xf:bind ref="instance('i-rec')//tei:place/tei:placeName" required="true()"/>-->
                     <!-- Bind ids -->
-                    <xf:bind ref="instance('i-rec')//tei:idno[@type='URI']" calculate="instance('i-new-id')/id/@uri"/>
-                    <xf:bind ref="instance('i-rec')//tei:persName/@xml:id" calculate="concat('name',instance('i-new-id')/id/@num,'-',count(instance('i-rec')//tei:persName) + 1)"/>
+                    <xf:bind ref="instance('i-rec')//tei:publicationStmt/tei:idno[@type='URI']" calculate="instance('i-new-id')/id/@uri"/>
+                    <xf:bind ref="instance('i-rec')//tei:person/tei:idno[@type='URI']" calculate="instance('i-new-id')/id/@uri"/>
                     <!-- Submissions -->
-                    <xf:submission id="s-get-view" resource="../services/submit.xql" ref="instance('i-rec')" replace="none" method="post">
-                        <xf:load ev:event="xforms-submit-done" show="new">
-                            <xf:resource value="concat('../services/view-rec.xql?path=',instance('i-results')//message/@path)"/>
-                        </xf:load>
+                    <xf:submission id="s-view-saved" resource="../services/submit.xql" ref="instance('i-rec')" replace="none" method="post">
+                        <xf:action ev:event="xforms-submit-done">
+                            <xf:load show="new">
+                                <xf:resource value="concat('../services/view-rec.xql?path=',instance('i-results')//message/@path)"/>
+                            </xf:load>
+                        </xf:action>
                     </xf:submission>
                     <xf:submission id="s-save" resource="../services/submit.xql" ref="instance('i-rec')" replace="instance" instance="i-results" method="post">
                         <xf:action ev:event="xforms-submit-done">
-                            <!--<xf:message ref="instance('i-results')//text()"/>-->
-                            <xf:message>Saved!</xf:message>
+                            <xf:message ref="instance('i-results')//message"/>
                         </xf:action>
                         <xf:action ev:event="xforms-submit-error">
-                            <xf:message ref="instance('i-results')//text()"/>
+                            <xf:message ref="instance('i-results')//message"/>
                         </xf:action>
                     </xf:submission>
                     <xf:submission id="s-load-source" resource="../services/bibl-list.xql" method="get" ref="instance('i-uri')//id" replace="instance" targetref="instance('i-new-bibl')"/>
