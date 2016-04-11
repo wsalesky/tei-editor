@@ -4,8 +4,7 @@ declare namespace html="http://www.w3.org/1999/xhtml";
 declare namespace xf="http://www.w3.org/2002/xforms";
 
 (:~
- : Used to render xform with xsltforms
- : Note: need to add app:dir var, and use in configuring css
+ : Note need to add app:dir var, and use in configuring css
 :)
 
 (:~
@@ -73,7 +72,7 @@ declare function local:insert-element($node as node()?, $new-node as node(),
              }
          else $node
 };
-let $cache := 'Test cache'
+
 let $form-name := request:get-parameter("form", "")
 let $form-path := $form-name
 let $form-doc := doc($form-path)
@@ -95,5 +94,5 @@ let $params :=
 </parameters>
 
 let $serialization-options := 'method=xml media-type=text/html omit-xml-declaration=yes indent=no'
-
+let $cache := current-dateTime()
 return ($xslt-pi,$css-pi, $debug, $form-doc)

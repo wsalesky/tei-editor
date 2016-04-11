@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<div xmlns="http://www.w3.org/1999/xhtml" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:xf="http://www.w3.org/2002/xforms" class="tei-element">
+    <xf:repeat ref="tei:persName" id="new-person-name">
+        <fieldset>
+            <legend> 
+                Name
+                <xf:trigger appearance="minimal" class="btn remove pull-right">
+                    <xf:label/>
+                    <xf:delete ev:event="DOMActivate" ref="."/>
+                </xf:trigger>
+            </legend>
+            <div class="panel">
+                <div class="form-inline">
+                    <xf:input ref="self::*[not(child::*)]" class="input-md">
+                        <xf:label>Name</xf:label>
+                    </xf:input>
+                </div>
+                <div class="form-inline">
+                    <xi:include href="lang-attr.xml"/>
+                    <xi:include href="source-attr.xml"/>
+                    <xf:trigger class="btn btn-default add" appearance="minimal" ref="self::node()[not(@syriaca-tags)]">
+                        <xf:label>Make Headword</xf:label>
+                        <xf:insert ev:event="DOMActivate" context="." at="." origin="instance('i-template')//tei:person/tei:persName/@syriaca-tags"/>
+                    </xf:trigger>
+                    <xf:output ref="@syriaca-tags">
+                        <xf:label class="inline">Headword: </xf:label>
+                    </xf:output>
+                    <xf:trigger appearance="minimal" class="btn remove" ref="@syriaca-tags">
+                        <xf:label/>
+                        <xf:delete ev:event="DOMActivate" ref="."/>
+                    </xf:trigger>
+                </div>
+            </div>
+            <!--
+            <div class="row">
+            <div class="col-md-9">
+                <div class="form-inline">
+                    <xf:input ref="self::*[not(child::*)]" class="input-md">
+                        <xf:label>Name</xf:label>
+                    </xf:input>
+                </div>    
+                <div class="form-inline">
+                    <xi:include href="lang-attr.xml"/>
+                    <xi:include href="source-attr.xml"/>
+                    <xf:trigger class="btn btn-default add" appearance="minimal" ref="self::node()[not(@syriaca-tags)]">
+                        <xf:label>Make Headword</xf:label>
+                        <xf:insert ev:event="DOMActivate" context="." at="."
+                            origin="instance('i-template')//tei:person/tei:persName/@syriaca-tags"/>
+                    </xf:trigger>
+                    <xf:output ref="@syriaca-tags">
+                        <xf:label class="inline">Headword: </xf:label>
+                    </xf:output>
+                    <xf:trigger appearance="minimal" class="btn remove" ref="@syriaca-tags">
+                        <xf:label/>
+                        <xf:delete ev:event="DOMActivate" ref="."/>
+                    </xf:trigger>
+                </div>
+                <div class="form-inline">
+                    <xf:input ref="tei:roleName">
+                        <xf:label>roleName</xf:label>
+                        <xf:trigger appearance="minimal" class="btn remove">
+                            <xf:label/>
+                            <xf:delete ev:event="DOMActivate" ref="."/>
+                        </xf:trigger>
+                    </xf:input>
+                </div>
+                <div class="form-inline">
+                    <xf:input ref="tei:roleName">
+                        <xf:label>Forename</xf:label>
+                        <xf:trigger appearance="minimal" class="btn remove">
+                            <xf:label/>
+                            <xf:delete ev:event="DOMActivate" ref="."/>
+                        </xf:trigger>
+                    </xf:input>
+                </div>
+                <div class="form-inline">
+                    <xf:input ref="tei:roleName">
+                        <xf:label>addName</xf:label>
+                        <xf:trigger appearance="minimal" class="btn remove">
+                            <xf:label/>
+                            <xf:delete ev:event="DOMActivate" ref="."/>
+                        </xf:trigger>
+                    </xf:input>
+                </div>
+            </div>
+            <div class="col-md-3 optional">
+                <h4>Optional Elements</h4>
+                <xf:trigger class="btn add" appearance="minimal" ref="self::*[not(tei:roleName)]">
+                    <xf:label>roleName</xf:label>
+                    <xf:insert ev:event="DOMActivate" context="." ref="tei:roleName"
+                        origin="instance('i-template')//tei:person/tei:persName/tei:roleName"/>
+                </xf:trigger>
+                <xf:trigger class="btn add" appearance="minimal" ref="self::*[not(tei:forename)]">
+                    <xf:label>forename</xf:label>
+                    <xf:insert ev:event="DOMActivate" context="."
+                        origin="instance('i-template')//tei:person/tei:persName/tei:forename"/>
+                </xf:trigger>
+                <xf:trigger class="btn add" appearance="minimal" ref="self::*[not(tei:addName)]">
+                    <xf:label>addName</xf:label>
+                    <xf:insert ev:event="DOMActivate" context="."
+                        origin="instance('i-template')//tei:person/tei:persName/tei:addName"/>
+                </xf:trigger>
+            </div>
+            
+            </div>
+            -->
+        </fieldset>
+    </xf:repeat>
+</div>

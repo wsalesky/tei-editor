@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<div xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:xf="http://www.w3.org/2002/xforms" class="tei-element">
+        <!-- NOTE will need to indicate if it is a headword? -->
+    <xf:repeat ref="tei:state" id="new-state">
+        <fieldset>
+            <legend> 
+                State
+                <xf:trigger appearance="minimal" class="btn remove pull-right">
+                    <xf:label/>
+                    <xf:delete ev:event="DOMActivate" ref="."/>
+                </xf:trigger>
+            </legend>
+            <div class="panel">
+                <xf:input ref=".">
+                    <xf:label/>
+                </xf:input>
+                <xi:include href="source-attr.xml"/>
+                <xi:include href="date-attr.xml"/>
+            </div>
+        </fieldset>
+    </xf:repeat>
+</div>

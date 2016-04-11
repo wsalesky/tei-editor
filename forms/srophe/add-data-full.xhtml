@@ -1,0 +1,1180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- @depreciated: full place record xforms example does not use xi:includes-->
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:bf="http://betterform.sourceforge.net/xforms" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:xf="http://www.w3.org/2002/xforms" bf:toaster-position="tl-down">
+    <head>
+        <title>Add place data</title>
+        <meta name="author" content="wsalesky at gmail.com"/>
+        <meta name="description" content="Add place data"/>
+        <link rel="stylesheet" type="text/css" href="/exist/apps/srophe-admin/resources/css/xforms.css"/>
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css"/>
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"/>
+        <script type="text/javascript" src="$shared/resources/scripts/loadsource.js"/>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"/>
+        <style type="text/css">
+            .xfRepeatIndex{background-color:white !important; padding:.5em;}
+            .glyphicon-remove-sign{padding:0; margin:0;}
+            .red{color:red;}
+            .add {font-size:.75em;}
+            .green{color:#81c348;}
+            label{font-weight:bold; padding-right:1em;}
+            .xfTrigger{margin-left: 1em;}
+            .small-btn{display:block; width:4em; margin:0;}
+            .btn { margin-top:1.5em;}
+            .divider {border:none;padding:1em 0;}
+            input{width: 12em;}
+            .input-small input{width: 8em;}
+            .inline {display:inline !important; margin-left:0;}
+            .lang-switch {margin-top:-1em;}
+            .lang-switch label{font-weight:bold; padding-right:0;}
+            textarea {width: 30em;}
+            td {padding-right: 1em;}
+            .well {background-color:white;}
+            .accordion-heading{
+                background: rgb(255,255,255); /* Old browsers */
+                background: -moz-linear-gradient(top, rgba(255,255,255,1) 0%, rgba(229,229,229,1) 100%); /* FF3.6+ */
+                background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(255,255,255,1)), color-stop(100%,rgba(229,229,229,1))); /* Chrome,Safari4+ */
+                background: -webkit-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(229,229,229,1) 100%); /* Chrome10+,Safari5.1+ */
+                background: -o-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(229,229,229,1) 100%); /* Opera 11.10+ */
+                background: -ms-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(229,229,229,1) 100%); /* IE10+ */
+                background: linear-gradient(to bottom, rgba(255,255,255,1) 0%,rgba(229,229,229,1) 100%); /* W3C */
+                filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#e5e5e5',GradientType=0 ); /* IE6-9 */}
+        body .modal-bibl .modal-dialog{
+                /* new custom width */
+                width: 950px;
+            }
+            .horiz-tab-menu .tabs {
+            margin-top: 1em;
+            border-left: #ccc solid 1px;
+            border-top: #ccc solid 1px;
+            border-right: #ccc solid 1px;
+            border-bottom: -2px; /* so the tab blends into the region under the tab */
+            font-weight: bold;
+            color: #666;
+            /* spacing between the tabs */
+            margin-right: 0;
+            margin-left: 0;
+            padding: 1em;
+            /* round corners at the top of the tab - does not work on older versions of IE */
+            -webkit-border-top-left-radius: 5px;
+            -webkit-border-top-right-radius: 5px;
+            -moz-border-radius-topleft: 5px;
+            -moz-border-radius-topright: 5px;
+            border-top-left-radius: 5px;
+            border-top-right-radius: 5px;}
+        </style>
+    </head>
+    <body>
+        <div id="xforms" class="section">
+            <div style="display:none">
+                <xf:model id="master">
+                    <!-- Generate new in xquery, populate place-id -->
+                    <!-- use xquery to populate info field about place?? -->
+                    <xf:instance xmlns="" id="new" src="templates/new.xml"/>
+                    <xf:instance xmlns="" id="simple" src="templates/new.xml"/>
+                    <xf:instance xmlns="" id="template" src="templates/template.xml"/>
+                    <xf:instance xmlns="" id="confessions" src="/exist/apps/srophe/documentation/confessions.xml"/>
+                    <xf:instance xmlns="" id="bibl" src="bibl-list.xql"/>
+                    <xf:instance xmlns="" id="new-bibl">
+                        <bibl xmlns="http://www.tei-c.org/ns/1.0">
+                            <ptr target="http://syriaca.org/bibl/"/>
+                        </bibl>
+                    </xf:instance>
+                    <xf:instance xmlns="" id="blank-bibl">
+                        <bibl xmlns="http://www.tei-c.org/ns/1.0" xml:id="bibnum">
+                            <author/>
+                            <editor/>
+                            <title level="m" xml:lang="en"/>
+                            <ptr target="http://syriaca.org/bibl/"/>
+                            <citedRange unit="pp"/>
+                        </bibl>
+                    </xf:instance>
+                    <xf:instance xmlns="" id="uri">
+                        <data>
+                            <id>http://syriaca.org/bibl/12</id>
+                        </data>
+                    </xf:instance>
+                    <xf:submission id="load-source" resource="bibl-list.xql" method="get" ref="instance('uri')//id" replace="instance" targetref="instance('new-bibl')"/>
+                    <!--<xf:bind ref="instance('new')//tei:place/tei:bibl/@xml:id" calculate="concat('#bib',substring-after(//tei:place/@xml:id,'place-'),'-',position())"/>-->
+                    <!--<xf:submission id="save" action="submit.xql" ref="instance('new')" instance="new" replace="all" method="post">
+                        <xf:action ev:event="xforms-submit-done" ev:observer="save">
+                            <xf:message level="modal">Item Saved! An area editor must review the submitted data before it can be included in the Gazzetteer.</xf:message>
+                        </xf:action>
+                        <xf:action ev:event="xforms-submit-error" ev:observer="save">
+                            <xf:message level="modal">Error publishing record.</xf:message>
+                        </xf:action>
+                    </xf:submission>-->
+                    <xf:submission id="save" action="submit.xql" ref="instance('new')" instance="new" replace="all" method="post"/>
+                </xf:model>
+            </div>
+            <div class="row">
+                <div class="col-md-10">
+                    <h1>Form Title</h1>
+                </div>
+                <div class="col-md-2">
+                    <div class="btn btn-primary pull-right">
+                        <xf:trigger appearance="minimal">
+                            <xf:label>Save</xf:label>
+                            <xf:hint>Be calm - this is just a demo! ;)</xf:hint>
+                            <xf:send submission="save"/>
+                        </xf:trigger>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                <div class="panel panel-default">
+                    <div class="panel-heading" role="tab" id="headingOne">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">Place Name</a>
+                        </h4>
+                    </div>
+                    <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+                        <div class="panel-body">
+                            <fieldset class="well">
+                                <label>Place </label>
+                                <xf:repeat ref="instance('new')//tei:place/tei:placeName" id="newPlaceName">
+                                    <div class="row">
+                                        <div class="col-md-1">
+                                            <xf:trigger appearance="minimal">
+                                                <xf:label>
+                                                    <span class="glyphicon glyphicon-remove-sign btn-lg red" aria-hidden="true"/>
+                                                </xf:label>
+                                                <xf:delete ev:event="DOMActivate" at="index('newPlaceName')"/>
+                                            </xf:trigger>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <xf:input ref=".">
+                                                <xf:label>Name</xf:label>
+                                            </xf:input>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="lang-switch">
+                                                <xf:switch id="place-lang" ref="@xml:lang">
+                                                    <xf:case id="select-place-lang" selected="true()">
+                                                        <xf:trigger appearance="minimal" class="inline">
+                                                            <xf:label>Select OR </xf:label>
+                                                            <xf:toggle case="select-place-lang" ev:event="DOMActivate"/>
+                                                        </xf:trigger>
+                                                        <xf:trigger appearance="minimal" class="inline">
+                                                            <xf:label>Enter Language</xf:label>
+                                                            <xf:toggle case="enter-place-lang" ev:event="DOMActivate"/>
+                                                        </xf:trigger>
+                                                        <xf:select1 ref=".">
+                                                            <xf:item>
+                                                                <xf:label>--- Select Language ---</xf:label>
+                                                                <xf:value/>
+                                                            </xf:item>
+                                                            <xf:item>
+                                                                <xf:label>English</xf:label>
+                                                                <xf:value>en</xf:value>
+                                                            </xf:item>
+                                                            <xf:item>
+                                                                <xf:label>Vocalized West Syriac</xf:label>
+                                                                <xf:value>syr-Syrj</xf:value>
+                                                            </xf:item>
+                                                            <xf:item>
+                                                                <xf:label>Vocalized East Syriac</xf:label>
+                                                                <xf:value>syr-Syrn</xf:value>
+                                                            </xf:item>
+                                                            <xf:item>
+                                                                <xf:label>Arabic</xf:label>
+                                                                <xf:value>ar</xf:value>
+                                                            </xf:item>
+                                                        </xf:select1>
+                                                    </xf:case>
+                                                    <xf:case id="enter-place-lang">
+                                                        <xf:trigger appearance="minimal" class="inline">
+                                                            <xf:label>Select OR </xf:label>
+                                                            <xf:toggle case="select-place-lang" ev:event="DOMActivate"/>
+                                                        </xf:trigger>
+                                                        <xf:trigger appearance="minimal" class="inline">
+                                                            <xf:label>Enter Language</xf:label>
+                                                            <xf:toggle case="enter-place-lang" ev:event="DOMActivate"/>
+                                                        </xf:trigger>
+                                                        <xf:input ref="."/>
+                                                    </xf:case>
+                                                </xf:switch>
+                                            </div>
+                                            <xf:trigger class="btn" appearance="minimal" ref="not(@xml:lang)">
+                                                <xf:label>Add Language</xf:label>
+                                                <xf:insert ev:event="DOMActivate" context="instance('new')//tei:place" ref="instance('new')//tei:place/tei:placeName" at="last()" position="after" origin="instance('template')//tei:place/tei:placeName/@xml:lang"/>
+                                            </xf:trigger>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <xf:select1 ref="@source" class="input-small">
+                                                <xf:label>Source:</xf:label>
+                                                <xf:itemset ref="instance('new')//tei:bibl">
+                                                    <xf:label ref="tei:title"/>
+                                                    <xf:value ref="@xml:id"/>
+                                                </xf:itemset>
+                                            </xf:select1>
+                                        </div>
+                                        <div class="col-md-1">
+                                            <button type="text" class="btn btn-link btn-source" data-toggle="modal" data-target="#myModal">New source</button>
+                                        </div>
+                                        <div class="col-md-1"/>
+                                    </div>
+                                    <div class="divider"/>
+                                </xf:repeat>
+                            </fieldset>
+                            <xf:trigger class="btn add" appearance="minimal">
+                                <xf:label>New Name</xf:label>
+                                <xf:insert ev:event="DOMActivate" context="instance('new')//tei:place" ref="instance('new')//tei:place/tei:placeName" at="last()" position="after" origin="instance('template')//tei:place/tei:placeName"/>
+                            </xf:trigger>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading" role="tab" id="headingTwo">
+                        <h4 class="panel-title">
+                            <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                Description
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+                        <div class="panel-body">
+                            <fieldset class="well">
+                                <label>Description</label>
+                                <xf:repeat ref="instance('new')//tei:place/tei:desc" id="newDesc">
+                                    <div class="row">
+                                        <div class="col-md-1">
+                                            <xf:trigger appearance="minimal">
+                                                <xf:label>
+                                                    <span class="glyphicon glyphicon-remove-sign btn-lg red" aria-hidden="true"/>
+                                                </xf:label>
+                                                <xf:delete ev:event="DOMActivate" at="index('newDesc')"/>
+                                            </xf:trigger>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <xf:switch id="desc-lang" ref="@xml:lang">
+                                                <xf:case id="select-desc-lang" selected="true()">
+                                                    <xf:trigger appearance="minimal" class="inline">
+                                                        <xf:label>Select OR </xf:label>
+                                                        <xf:toggle case="select-desc-lang" ev:event="DOMActivate"/>
+                                                    </xf:trigger>
+                                                    <xf:trigger appearance="minimal" class="inline">
+                                                        <xf:label>Enter Language</xf:label>
+                                                        <xf:toggle case="enter-desc-lang" ev:event="DOMActivate"/>
+                                                    </xf:trigger>
+                                                    <br/>
+                                                    <xf:select1 ref=".">
+                                                        <xf:item>
+                                                            <xf:label>--- Select Language ---</xf:label>
+                                                            <xf:value/>
+                                                        </xf:item>
+                                                        <xf:item>
+                                                            <xf:label>English</xf:label>
+                                                            <xf:value>en</xf:value>
+                                                        </xf:item>
+                                                        <xf:item>
+                                                            <xf:label>Vocalized West Syriac</xf:label>
+                                                            <xf:value>syr-Syrj</xf:value>
+                                                        </xf:item>
+                                                        <xf:item>
+                                                            <xf:label>Vocalized East Syriac</xf:label>
+                                                            <xf:value>syr-Syrn</xf:value>
+                                                        </xf:item>
+                                                        <xf:item>
+                                                            <xf:label>Arabic</xf:label>
+                                                            <xf:value>ar</xf:value>
+                                                        </xf:item>
+                                                    </xf:select1>
+                                                </xf:case>
+                                                <xf:case id="enter-desc-lang">
+                                                    <xf:trigger appearance="minimal" class="inline">
+                                                        <xf:label>Select OR </xf:label>
+                                                        <xf:toggle case="select-desc-lang" ev:event="DOMActivate"/>
+                                                    </xf:trigger>
+                                                    <xf:trigger appearance="minimal" class="inline">
+                                                        <xf:label>Enter Language</xf:label>
+                                                        <xf:toggle case="enter-desc-lang" ev:event="DOMActivate"/>
+                                                    </xf:trigger>
+                                                    <xf:input ref="."/>
+                                                </xf:case>
+                                            </xf:switch>
+                                            <xf:trigger class="btn" appearance="minimal" ref="not(@xml:lang)">
+                                                <xf:label>Add Language</xf:label>
+                                                <xf:insert ev:event="DOMActivate" context="instance('new')//tei:place" ref="instance('new')//tei:place/tei:desc" at="last()" position="after" origin="instance('template')//tei:place/tei:desc/@xml:lang"/>
+                                            </xf:trigger>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <xf:select1 ref="tei:quote/@source" class="input-small">
+                                                <xf:label>Source:</xf:label>
+                                                <xf:itemset ref="instance('new')//tei:bibl">
+                                                    <xf:label ref="@xml:id"/>
+                                                    <xf:value ref="@xml:id"/>
+                                                </xf:itemset>
+                                            </xf:select1>
+                                        </div>
+                                        <div class="col-md-1">
+                                            <button type="text" class="btn btn-link btn-source" data-toggle="modal" data-target="#myModal">New source</button>
+                                        </div>
+                                        <div class="col-md-2"/>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <xf:textarea ref="tei:quote"/>
+                                        </div>
+                                    </div>
+                                </xf:repeat>
+                            </fieldset>
+                            <xf:trigger class="btn add" appearance="minimal">
+                                <xf:label>New Description</xf:label>
+                                <xf:insert ev:event="DOMActivate" context="instance('new')//tei:place" ref="instance('new')//tei:place/tei:desc" at="last()" position="after" origin="instance('template')//tei:place/tei:desc"/>
+                            </xf:trigger>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading" role="tab" id="headingThree">
+                        <h4 class="panel-title">
+                            <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                Location
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+                        <div class="panel-body">
+                            <fieldset class="well">    
+                                <!-- Need to work on more complex location element -->
+                                <xf:repeat ref="instance('new')//tei:place/tei:location/tei:geo" id="newCoords">
+                                    <div class="row">
+                                        <div class="col-md-1">
+                                            <xf:trigger appearance="minimal">
+                                                <xf:label>
+                                                    <span class="glyphicon glyphicon-remove-sign btn-lg red" aria-hidden="true"/>
+                                                </xf:label>
+                                                <xf:delete ev:event="DOMActivate" at="index('newPlaceName')"/>
+                                            </xf:trigger>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <xf:input ref=".">
+                                                <xf:label>Coordinates</xf:label>
+                                            </xf:input>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="lang-switch">
+                                                <xf:switch id="geo-lang" ref="../@xml:lang">
+                                                    <xf:case id="select-geo-lang" selected="true()">
+                                                        <xf:trigger appearance="minimal" class="inline">
+                                                            <xf:label>Select OR </xf:label>
+                                                            <xf:toggle case="select-geo-lang" ev:event="DOMActivate"/>
+                                                        </xf:trigger>
+                                                        <xf:trigger appearance="minimal" class="inline">
+                                                            <xf:label>Enter Language</xf:label>
+                                                            <xf:toggle case="enter-geo-lang" ev:event="DOMActivate"/>
+                                                        </xf:trigger>
+                                                        <xf:select1 ref=".">
+                                                            <xf:item>
+                                                                <xf:label>--- Select Language ---</xf:label>
+                                                                <xf:value/>
+                                                            </xf:item>
+                                                            <xf:item>
+                                                                <xf:label>English</xf:label>
+                                                                <xf:value>en</xf:value>
+                                                            </xf:item>
+                                                            <xf:item>
+                                                                <xf:label>Vocalized West Syriac</xf:label>
+                                                                <xf:value>syr-Syrj</xf:value>
+                                                            </xf:item>
+                                                            <xf:item>
+                                                                <xf:label>Vocalized East Syriac</xf:label>
+                                                                <xf:value>syr-Syrn</xf:value>
+                                                            </xf:item>
+                                                            <xf:item>
+                                                                <xf:label>Arabic</xf:label>
+                                                                <xf:value>ar</xf:value>
+                                                            </xf:item>
+                                                        </xf:select1>
+                                                    </xf:case>
+                                                    <xf:case id="enter-geo-lang">
+                                                        <xf:trigger appearance="minimal" class="inline">
+                                                            <xf:label>Select OR </xf:label>
+                                                            <xf:toggle case="select-geo-lang" ev:event="DOMActivate"/>
+                                                        </xf:trigger>
+                                                        <xf:trigger appearance="minimal" class="inline">
+                                                            <xf:label>Enter Language</xf:label>
+                                                            <xf:toggle case="enter-geo-lang" ev:event="DOMActivate"/>
+                                                        </xf:trigger>
+                                                        <xf:input ref="."/>
+                                                    </xf:case>
+                                                </xf:switch>
+                                            </div>
+                                            <xf:trigger class="btn" appearance="minimal" ref="not(../@xml:lang)">
+                                                <xf:label>Add Language</xf:label>
+                                                <xf:insert ev:event="DOMActivate" context="." ref="instance('new')//tei:place/tei:placeName" at="last()" position="after" origin="//tei:place/tei:location/[tei:geo]/@xml:lang"/>
+                                            </xf:trigger>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <xf:select1 ref="@source" class="input-small">
+                                                <xf:label>Source:</xf:label>
+                                                <xf:itemset ref="instance('new')//tei:bibl">
+                                                    <xf:label ref="tei:title"/>
+                                                    <xf:value ref="@xml:id"/>
+                                                </xf:itemset>
+                                            </xf:select1>
+                                        </div>
+                                        <div class="col-md-1">
+                                            <button type="text" class="btn btn-link btn-source" data-toggle="modal" data-target="#myModal">New source</button>
+                                        </div>
+                                        <div class="col-md-1"/>
+                                    </div>
+                                </xf:repeat>
+                                <xf:trigger class="btn" appearance="minimal">
+                                    <xf:label>Add coordinates</xf:label>
+                                    <xf:insert ev:event="DOMActivate" context="instance('new')//tei:place" ref="instance('new')//tei:place/tei:location[tei:geo]" at="last()" position="after" origin="instance('template')//tei:place/tei:location[tei:geo][1]"/>
+                                </xf:trigger>
+                            </fieldset>
+                            <fieldset class="well">    
+                                <!-- Need to work on more complex location element -->
+                                <xf:textarea ref="instance('new')//tei:place/tei:location[@type='relative']">
+                                    <xf:label>Location:</xf:label>
+                                </xf:textarea>
+                                <br/>
+                                <xf:trigger class="btn" appearance="minimal">
+                                    <xf:label>Add location</xf:label>
+                                    <xf:insert ev:event="DOMActivate" context="instance('new')//tei:place" ref="instance('new')//tei:place/tei:location[@type='relative']" at="last()" position="after" origin="instance('template')//tei:place/tei:location[@type='relative'][1]"/>
+                                </xf:trigger>
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading" role="tab" id="headingFour">
+                        <h4 class="panel-title">
+                            <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                                Events
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFour">
+                        <div class="panel-body">
+                            <fieldset class="well">
+                                <xf:repeat ref="instance('new')//tei:place/tei:event[not(@type='attestation')]" id="newevent">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <xf:input ref="tei:p">
+                                                <xf:label>Event: </xf:label>
+                                            </xf:input>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="lang-switch">
+                                                <xf:switch id="lang">
+                                                    <xf:case id="select-lang" selected="true()">
+                                                        <xf:trigger appearance="minimal" class="inline">
+                                                            <xf:label>Select OR </xf:label>
+                                                            <xf:toggle case="select-lang" ev:event="DOMActivate"/>
+                                                        </xf:trigger>
+                                                        <xf:trigger appearance="minimal" class="inline">
+                                                            <xf:label>Enter Language</xf:label>
+                                                            <xf:toggle case="enter-lang" ev:event="DOMActivate"/>
+                                                        </xf:trigger>
+                                                        <xf:select1 ref="@xml:lang">
+                                                            <xf:item>
+                                                                <xf:label>--- Select Language ---</xf:label>
+                                                                <xf:value/>
+                                                            </xf:item>
+                                                            <xf:item>
+                                                                <xf:label>English</xf:label>
+                                                                <xf:value>en</xf:value>
+                                                            </xf:item>
+                                                            <xf:item>
+                                                                <xf:label>Vocalized West Syriac</xf:label>
+                                                                <xf:value>syr-Syrj</xf:value>
+                                                            </xf:item>
+                                                            <xf:item>
+                                                                <xf:label>Vocalized East Syriac</xf:label>
+                                                                <xf:value>syr-Syrn</xf:value>
+                                                            </xf:item>
+                                                            <xf:item>
+                                                                <xf:label>Arabic</xf:label>
+                                                                <xf:value>ar</xf:value>
+                                                            </xf:item>
+                                                        </xf:select1>
+                                                    </xf:case>
+                                                    <xf:case id="enter-lang">
+                                                        <xf:trigger appearance="minimal" class="inline">
+                                                            <xf:label>Select OR </xf:label>
+                                                            <xf:toggle case="select-lang" ev:event="DOMActivate"/>
+                                                        </xf:trigger>
+                                                        <xf:trigger appearance="minimal" class="inline">
+                                                            <xf:label>Enter Language</xf:label>
+                                                            <xf:toggle case="enter-lang" ev:event="DOMActivate"/>
+                                                        </xf:trigger>
+                                                        <xf:input ref="@xml:lang"/>
+                                                    </xf:case>
+                                                </xf:switch>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <xf:select1 ref="@source" class="input-small">
+                                                <xf:label>Source:</xf:label>
+                                                <xf:itemset ref="instance('new')//tei:bibl">
+                                                    <xf:label ref="@xml:id"/>
+                                                    <xf:value ref="@xml:id"/>
+                                                </xf:itemset>
+                                            </xf:select1>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">New source</button>
+                                        </div>
+                                        <div class="col-md-1"/>
+                                    </div>
+                                    <label>Dates:</label>
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <xf:input ref="@when" class="input-small">
+                                                <xf:label>When: </xf:label>
+                                            </xf:input>
+                                            <xf:trigger class="btn" appearance="minimal" ref="self::node()[not(@when)]">
+                                                <xf:label>+ when</xf:label>
+                                                <xf:insert ev:event="DOMActivate" context="." at="." origin="instance('template')//tei:place/tei:event[not(@type='attestation')][2]/@when"/>
+                                            </xf:trigger>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <xf:input ref="@from" class="input-small">
+                                                <xf:label>From: </xf:label>
+                                            </xf:input>
+                                            <xf:trigger class="btn" appearance="minimal" ref="self::node()[not(@from)]">
+                                                <xf:label>+ from</xf:label>
+                                                <xf:insert ev:event="DOMActivate" context="." at="." origin="instance('template')//tei:place/tei:event[not(@type='attestation')][2]/@from"/>
+                                            </xf:trigger>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <xf:input ref="@to" class="input-small">
+                                                <xf:label>To: </xf:label>
+                                            </xf:input>
+                                            <xf:trigger class="btn" appearance="minimal" ref="self::node()[not(@to)]">
+                                                <xf:label>+ to</xf:label>
+                                                <xf:insert ev:event="DOMActivate" context="." at="." origin="instance('template')//tei:place/tei:event[not(@type='attestation')][2]/@to"/>
+                                            </xf:trigger>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <xf:input ref="@notBefore" class="input-small">
+                                                <xf:label>Not Before: </xf:label>
+                                            </xf:input>
+                                            <xf:trigger class="btn" appearance="minimal" ref="self::node()[not(@notBefore)]">
+                                                <xf:label>+ notBefore</xf:label>
+                                                <xf:insert ev:event="DOMActivate" context="." at="." origin="instance('template')//tei:place/tei:event[not(@type='attestation')][2]/@notBefore"/>
+                                            </xf:trigger>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <xf:input ref="@notAfter" class="input-small">
+                                                <xf:label>Not After: </xf:label>
+                                            </xf:input>
+                                            <xf:trigger class="btn" appearance="minimal" ref="self::node()[not(@notAfter)]">
+                                                <xf:label>+ notAfter</xf:label>
+                                                <xf:insert ev:event="DOMActivate" context="." at="." origin="instance('template')//tei:place/tei:event[not(@type='attestation')][2]/@notAfter"/>
+                                            </xf:trigger>
+                                        </div>
+                                        <div class="col-md-2"/>
+                                    </div>
+                                    <!-- select date type from dropdown, have input popup -->
+                                    <!-- Toggle dates -->
+                                    <xf:trigger class="btn small-btn" appearance="minimal">
+                                        <xf:label>Remove</xf:label>
+                                        <xf:delete ev:event="DOMActivate" at="index('newevent')"/>
+                                    </xf:trigger>
+                                </xf:repeat>
+                            </fieldset>
+                            <xf:trigger class="btn" appearance="minimal">
+                                <xf:label>New event</xf:label>
+                                <xf:insert ev:event="DOMActivate" context="instance('new')//tei:place" ref="instance('new')//tei:place/tei:event" at="last()" position="after" origin="instance('template')//tei:place/tei:event[1]"/>
+                            </xf:trigger>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading" role="tab" id="headingFive">
+                        <h4 class="panel-title">
+                            <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                                Attestations
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapseFive" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFive">
+                        <div class="panel-body">
+                            <fieldset class="well">
+                                <xf:repeat ref="instance('new')//tei:place/tei:event[@type='attestation']" id="newattestation">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <xf:input ref="tei:p">
+                                                <xf:label>Attestation: </xf:label>
+                                            </xf:input>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="lang-switch">
+                                                <xf:switch id="lang">
+                                                    <xf:case id="select-lang" selected="true()">
+                                                        <xf:trigger appearance="minimal" class="inline">
+                                                            <xf:label>Select OR </xf:label>
+                                                            <xf:toggle case="select-lang" ev:event="DOMActivate"/>
+                                                        </xf:trigger>
+                                                        <xf:trigger appearance="minimal" class="inline">
+                                                            <xf:label>Enter Language</xf:label>
+                                                            <xf:toggle case="enter-lang" ev:event="DOMActivate"/>
+                                                        </xf:trigger>
+                                                        <xf:select1 ref="@xml:lang">
+                                                            <xf:item>
+                                                                <xf:label>--- Select Language ---</xf:label>
+                                                                <xf:value/>
+                                                            </xf:item>
+                                                            <xf:item>
+                                                                <xf:label>English</xf:label>
+                                                                <xf:value>en</xf:value>
+                                                            </xf:item>
+                                                            <xf:item>
+                                                                <xf:label>Vocalized West Syriac</xf:label>
+                                                                <xf:value>syr-Syrj</xf:value>
+                                                            </xf:item>
+                                                            <xf:item>
+                                                                <xf:label>Vocalized East Syriac</xf:label>
+                                                                <xf:value>syr-Syrn</xf:value>
+                                                            </xf:item>
+                                                            <xf:item>
+                                                                <xf:label>Arabic</xf:label>
+                                                                <xf:value>ar</xf:value>
+                                                            </xf:item>
+                                                        </xf:select1>
+                                                    </xf:case>
+                                                    <xf:case id="enter-lang">
+                                                        <xf:trigger appearance="minimal" class="inline">
+                                                            <xf:label>Select OR </xf:label>
+                                                            <xf:toggle case="select-lang" ev:event="DOMActivate"/>
+                                                        </xf:trigger>
+                                                        <xf:trigger appearance="minimal" class="inline">
+                                                            <xf:label>Enter Language</xf:label>
+                                                            <xf:toggle case="enter-lang" ev:event="DOMActivate"/>
+                                                        </xf:trigger>
+                                                        <xf:input ref="@xml:lang"/>
+                                                    </xf:case>
+                                                </xf:switch>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <xf:select1 ref="@source" class="input-small">
+                                                <xf:label>Source:</xf:label>
+                                                <xf:itemset ref="instance('new')//tei:bibl">
+                                                    <xf:label ref="@xml:id"/>
+                                                    <xf:value ref="@xml:id"/>
+                                                </xf:itemset>
+                                            </xf:select1>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">New source</button>
+                                        </div>
+                                        <div class="col-md-1"/>
+                                    </div>
+                                    <label>Dates:</label>
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <xf:input ref="@when" class="input-small">
+                                                <xf:label>When: </xf:label>
+                                            </xf:input>
+                                            <xf:trigger class="btn" appearance="minimal" ref="self::node()[not(@when)]">
+                                                <xf:label>+ When</xf:label>
+                                                <xf:insert ev:event="DOMActivate" context="." at="." origin="instance('template')//tei:place/tei:event[@type='attestation'][2]/@when"/>
+                                            </xf:trigger>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <xf:input ref="@from" class="input-small">
+                                                <xf:label>From: </xf:label>
+                                            </xf:input>
+                                            <xf:trigger class="btn" appearance="minimal" ref="self::node()[not(@from)]">
+                                                <xf:label>+ From</xf:label>
+                                                <xf:insert ev:event="DOMActivate" context="." at="." origin="instance('template')//tei:place/tei:event[@type='attestation'][2]/@from"/>
+                                            </xf:trigger>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <xf:input ref="@to" class="input-small">
+                                                <xf:label>To: </xf:label>
+                                            </xf:input>
+                                            <xf:trigger class="btn" appearance="minimal" ref="self::node()[not(@to)]">
+                                                <xf:label>+ To</xf:label>
+                                                <xf:insert ev:event="DOMActivate" context="." at="." origin="instance('template')//tei:place/tei:event[@type='attestation'][2]/@to"/>
+                                            </xf:trigger>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <xf:input ref="@notBefore" class="input-small">
+                                                <xf:label>Not Before: </xf:label>
+                                            </xf:input>
+                                            <xf:trigger class="btn" appearance="minimal" ref="self::node()[not(@notBefore)]">
+                                                <xf:label>+ notBefore</xf:label>
+                                                <xf:insert ev:event="DOMActivate" context="." at="." origin="instance('template')//tei:place/tei:event[@type='attestation'][2]/@notBefore"/>
+                                            </xf:trigger>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <xf:input ref="@notAfter" class="input-small">
+                                                <xf:label>Not After: </xf:label>
+                                            </xf:input>
+                                            <xf:trigger class="btn" appearance="minimal" ref="self::node()[not(@notAfter)]">
+                                                <xf:label>+ notAfter</xf:label>
+                                                <xf:insert ev:event="DOMActivate" context="." at="." origin="instance('template')//tei:place/tei:event[@type='attestation'][2]/@notAfter"/>
+                                            </xf:trigger>
+                                        </div>
+                                        <div class="col-md-2"/>
+                                    </div>
+                                    <!-- select date type from dropdown, have input popup -->
+                                    <xf:trigger class="btn small-btn" appearance="minimal">
+                                        <xf:label>Remove</xf:label>
+                                        <xf:delete ev:event="DOMActivate" at="index('newattestation')"/>
+                                    </xf:trigger>
+                                </xf:repeat>
+                            </fieldset>
+                            <xf:trigger class="btn" appearance="minimal">
+                                <xf:label>New attestation</xf:label>
+                                <xf:insert ev:event="DOMActivate" context="instance('new')//tei:place" ref="instance('new')//tei:place/tei:event[@type='attestation']" at="last()" position="after" origin="instance('template')//tei:place/tei:event[@type='attestation']"/>
+                            </xf:trigger>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading" role="tab" id="headingSix">
+                        <h4 class="panel-title">
+                            <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseSix" aria-expanded="false" aria-controls="collapseSix">
+                                Confessions    
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapseSix" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingSix">
+                        <div class="panel-body">
+                            <div class="accordion-inner">
+                                <fieldset class="well">
+                                    <xf:repeat ref="instance('new')//tei:place/tei:state[@type='confession']" id="newconfession">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <xf:select1 ref="tei:label">
+                                                    <xf:label>Confession:</xf:label>
+                                                    <xf:itemset ref="instance('confessions')//tei:item">
+                                                        <xf:label ref="child::tei:label"/>
+                                                        <xf:value ref="@xml:id"/>
+                                                    </xf:itemset>
+                                                </xf:select1>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <xf:select1 ref="@source" class="input-small">
+                                                    <xf:label>Source:</xf:label>
+                                                    <xf:itemset ref="instance('new')//tei:bibl">
+                                                        <xf:label ref="@xml:id"/>
+                                                        <xf:value ref="@xml:id"/>
+                                                    </xf:itemset>
+                                                </xf:select1>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">New source</button>
+                                            </div>
+                                            <div class="col-md-2"/>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label>Dates:</label>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-2">
+                                                <xf:input ref="@when" class="input-small">
+                                                    <xf:label>When: </xf:label>
+                                                </xf:input>
+                                                <xf:trigger class="btn" appearance="minimal" ref="self::node()[not(@when)]">
+                                                    <xf:label>+ When</xf:label>
+                                                    <xf:insert ev:event="DOMActivate" context="." at="." origin="instance('template')//tei:place/tei:state[@type='confession'][2]/@when"/>
+                                                </xf:trigger>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <xf:input ref="@from" class="input-small">
+                                                    <xf:label>From: </xf:label>
+                                                </xf:input>
+                                                <xf:trigger class="btn" appearance="minimal" ref="self::node()[not(@from)]">
+                                                    <xf:label>+ From</xf:label>
+                                                    <xf:insert ev:event="DOMActivate" context="." at="." origin="instance('template')//tei:place/tei:state[@type='confession'][2]/@from"/>
+                                                </xf:trigger>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <xf:input ref="@to" class="input-small">
+                                                    <xf:label>To: </xf:label>
+                                                </xf:input>
+                                                <xf:trigger class="btn" appearance="minimal" ref="self::node()[not(@to)]">
+                                                    <xf:label>+ To</xf:label>
+                                                    <xf:insert ev:event="DOMActivate" context="." at="." origin="instance('template')//tei:place/tei:state[@type='confession'][2]/@to"/>
+                                                </xf:trigger>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <xf:input ref="@notBefore" class="input-small">
+                                                    <xf:label>Not Before: </xf:label>
+                                                </xf:input>
+                                                <xf:trigger class="btn" appearance="minimal" ref="self::node()[not(@notBefore)]">
+                                                    <xf:label>+ notBefore</xf:label>
+                                                    <xf:insert ev:event="DOMActivate" context="." at="." origin="instance('template')//tei:place/tei:state[@type='confession'][2]/@notBefore"/>
+                                                </xf:trigger>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <xf:input ref="@notAfter" class="input-small">
+                                                    <xf:label>Not After: </xf:label>
+                                                </xf:input>
+                                                <xf:trigger class="btn" appearance="minimal" ref="self::node()[not(@notAfter)]">
+                                                    <xf:label>+ notAfter</xf:label>
+                                                    <xf:insert ev:event="DOMActivate" context="." at="." origin="instance('template')//tei:place/tei:state[@type='confession'][2]/@notAfter"/>
+                                                </xf:trigger>
+                                            </div>
+                                            <div class="col-md-2"/>
+                                        </div>
+                                        <!-- bind ref to confession bind bibl, or have dropdown -->
+                                        <xf:trigger class="btn small-btn" appearance="minimal">
+                                            <xf:label>Remove</xf:label>
+                                            <xf:delete ev:event="DOMActivate" at="index('newconfession')"/>
+                                        </xf:trigger>
+                                    </xf:repeat>
+                                </fieldset>
+                                <xf:trigger class="btn" appearance="minimal">
+                                    <xf:label>New confession</xf:label>
+                                    <xf:insert ev:event="DOMActivate" context="instance('new')//tei:place" ref="instance('new')//tei:place/tei:state[@type='confession']" at="last()" position="after" origin="instance('template')//tei:place/tei:state[@type='confession'][1]"/>
+                                </xf:trigger>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading" role="tab" id="headingSeven">
+                        <h4 class="panel-title">
+                            <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseSeven" aria-expanded="false" aria-controls="collapseSeven">
+                                Notes
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="collapseSeven" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingSeven">
+                        <div class="panel-body">
+                            <fieldset class="well">
+                                <xf:repeat ref="instance('new')//tei:place/tei:note" id="newnote">
+                                    <xf:select1 ref=".">
+                                        <xf:label>Type:</xf:label>
+                                        <xf:item>
+                                            <xf:label>--- Select Note Type ---</xf:label>
+                                            <xf:value/>
+                                        </xf:item>
+                                        <xf:item>
+                                            <xf:label>Errata</xf:label>
+                                            <xf:value>errata</xf:value>
+                                        </xf:item>
+                                        <xf:item>
+                                            <xf:label>Corrigenda</xf:label>
+                                            <xf:value>corrigenda</xf:value>
+                                        </xf:item>
+                                        <xf:item>
+                                            <xf:label>Incerta</xf:label>
+                                            <xf:value>incerta</xf:value>
+                                        </xf:item>
+                                    </xf:select1>
+                                    <!-- Should there be a source? -->
+                                    <xf:textarea ref="."/>
+                                    <!-- select date type from dropdown, have input popup -->
+                                    <xf:trigger class="btn small-btn" appearance="minimal">
+                                        <xf:label>Remove</xf:label>
+                                        <xf:delete ev:event="DOMActivate" at="index('newnote')"/>
+                                    </xf:trigger>
+                                </xf:repeat>
+                            </fieldset>
+                            <xf:trigger class="btn" appearance="minimal">
+                                <xf:label>New note</xf:label>
+                                <xf:insert ev:event="DOMActivate" context="instance('new')//tei:place" ref="instance('new')//tei:place/tei:note" at="last()" position="after" origin="instance('template')//tei:place/tei:note"/>
+                            </xf:trigger>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Modal -->
+            <!-- Button trigger modal -->
+            <!--<div id="embeddedForm"/>
+            <xf:trigger id="trigger-load-embed" class="btn btn-primary">
+                <xf:label>Load embedded Form</xf:label>
+                <xf:action data-toggle="modal" data-target="#myModal">
+                    <xf:load show="embed" targetid="embeddedForm">
+                        <xf:resource value="'add-bibl.xhtml#xforms'"/>
+                    </xf:load>
+            </xf:trigger>
+            -->
+            <!--<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Add source</button>-->
+            
+            <!-- Modal -->
+            <div class="modal fade modal-bibl" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Add New Source:</h4> 
+                            <!--
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+                            -->
+                        </div>
+                        <div class="modal-body">
+                            <div class="container-fluid">
+                            <!-- List all existing titles -->
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <xf:repeat ref="instance('uri')//id" id="uri">
+                                            <h4>Select Source form Syriaca.org bibliography:</h4>
+                                            <div class="input-group">
+                                                <xf:select1 ref="." class="form-control">
+                                                    <xf:label/>
+                                                    <xf:itemset ref="instance('bibl')//tei:TEI">
+                                                        <xf:label ref="tei:title"/>
+                                                        <xf:value ref="tei:idno"/>
+                                                    </xf:itemset>
+                                                    <xf:action ev:event="xforms-value-changed">
+                                                        <xf:send submission="load-source"/>
+                                                    </xf:action>
+                                                </xf:select1>
+                                                <xf:trigger appearance="minimal" class="input-group-addon" ref="instance('new-bibl')//tei:title">
+                                                    <xf:label>Select</xf:label>
+                                                    <xf:toggle case="edit-bibl" ev:event="DOMActivate"/>
+                                                </xf:trigger>
+                                            </div>
+                                        </xf:repeat>
+                                    </div>
+                                </div>
+                                <div class="horiz-tab-menu">
+                                    <xf:trigger appearance="minimal" class="tabs" ref="instance('new-bibl')//tei:title">
+                                        <xf:label>View Citation </xf:label>
+                                        <xf:toggle case="view-bibl" ev:event="DOMActivate"/>
+                                    </xf:trigger>
+                                    <xf:trigger appearance="minimal" class="tabs" ref="instance('new-bibl')//tei:title">
+                                        <xf:label>Edit Citation </xf:label>
+                                        <xf:toggle case="edit-bibl" ev:event="DOMActivate"/>
+                                    </xf:trigger>
+                                </div>
+                                <div class="well section">
+                                    <xf:switch id="bibl">
+                                        <xf:case id="view-bibl" selected="true()">
+                                            <xf:repeat ref="instance('new-bibl')//tei:title" id="view-title">
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <xf:output ref=".">
+                                                            <xf:label class="inline">Title: </xf:label>
+                                                        </xf:output>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <xf:output ref="@level">
+                                                            <xf:label class="inline">Level: </xf:label>
+                                                        </xf:output>
+                                                    </div>
+                                                </div>
+                                            </xf:repeat>
+                                            <xf:repeat ref="instance('new-bibl')//tei:author" id="view-auth">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <xf:output ref=".">
+                                                            <xf:label class="inline">Author: </xf:label>
+                                                        </xf:output>
+                                                    </div>
+                                                </div>
+                                            </xf:repeat>
+                                            <xf:repeat ref="instance('new-bibl')//tei:editor" id="view-editor">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <xf:output ref=".">
+                                                            <xf:label class="inline">Editor: </xf:label>
+                                                        </xf:output>
+                                                    </div>
+                                                </div>
+                                            </xf:repeat>
+                                        </xf:case>
+                                        <xf:case id="edit-bibl">
+                                            <fieldset>
+                                                <h4>Titles /
+                                            <xf:trigger class="inline add" appearance="minimal">
+                                                        <xf:label>
+                                                            <span class="glyphicon glyphicon-plus-sign green" aria-hidden="true"/> Add Title</xf:label>
+                                                        <xf:insert ev:event="DOMActivate" context="instance('new-bibl')//tei:title" ref="instance('new-bibl')//tei:title[last()]" at="last()" position="after" origin="instance('blank-bibl')//tei:title"/>
+                                                    </xf:trigger>
+                                                </h4>
+                                                <xf:repeat ref="instance('new-bibl')//tei:title" id="source-title">
+                                                    <div class="row">
+                                                        <div class="col-md-1">
+                                                            <xf:trigger appearance="minimal">
+                                                                <xf:label>
+                                                                    <span class="glyphicon glyphicon-remove-sign red" aria-hidden="true"/>
+                                                                </xf:label>
+                                                                <xf:delete ev:event="DOMActivate" at="index('source-title')"/>
+                                                            </xf:trigger>
+                                                        </div>
+                                                        <div class="col-md-5">
+                                                            <xf:input ref="." class="input-reg">
+                                                                <xf:label>Title: </xf:label>
+                                                            </xf:input>&#160;
+                                                </div>
+                                                        <div class="col-md-3">
+                                                            <xf:select1 ref="@level">
+                                                                <xf:label>Level: </xf:label>
+                                                                <xf:item>
+                                                                    <xf:label>Article</xf:label>
+                                                                    <xf:value>a</xf:value>
+                                                                </xf:item>
+                                                                <xf:item>
+                                                                    <xf:label>Manuscript</xf:label>
+                                                                    <xf:value>m</xf:value>
+                                                                </xf:item>
+                                                            </xf:select1>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <div class="lang-switch">
+                                                                <xf:switch id="lang">
+                                                                    <xf:case id="select-lang" selected="true()">
+                                                                        <xf:trigger appearance="minimal" class="inline">
+                                                                            <xf:label>Select OR </xf:label>
+                                                                            <xf:toggle case="select-lang" ev:event="DOMActivate"/>
+                                                                        </xf:trigger>
+                                                                        <xf:trigger appearance="minimal" class="inline">
+                                                                            <xf:label>Enter Language</xf:label>
+                                                                            <xf:toggle case="enter-lang" ev:event="DOMActivate"/>
+                                                                        </xf:trigger>
+                                                                        <xf:select1 ref="@xml:lang">
+                                                                            <xf:item>
+                                                                                <xf:label>--- Select Language ---</xf:label>
+                                                                                <xf:value/>
+                                                                            </xf:item>
+                                                                            <xf:item>
+                                                                                <xf:label>English</xf:label>
+                                                                                <xf:value>en</xf:value>
+                                                                            </xf:item>
+                                                                            <xf:item>
+                                                                                <xf:label>Vocalized West Syriac</xf:label>
+                                                                                <xf:value>syr-Syrj</xf:value>
+                                                                            </xf:item>
+                                                                            <xf:item>
+                                                                                <xf:label>Vocalized East Syriac</xf:label>
+                                                                                <xf:value>syr-Syrn</xf:value>
+                                                                            </xf:item>
+                                                                            <xf:item>
+                                                                                <xf:label>Arabic</xf:label>
+                                                                                <xf:value>ar</xf:value>
+                                                                            </xf:item>
+                                                                        </xf:select1>
+                                                                    </xf:case>
+                                                                    <xf:case id="enter-lang">
+                                                                        <xf:trigger appearance="minimal" class="inline">
+                                                                            <xf:label>Select OR </xf:label>
+                                                                            <xf:toggle case="select-lang" ev:event="DOMActivate"/>
+                                                                        </xf:trigger>
+                                                                        <xf:trigger appearance="minimal" class="inline">
+                                                                            <xf:label>Enter Language</xf:label>
+                                                                            <xf:toggle case="enter-lang" ev:event="DOMActivate"/>
+                                                                        </xf:trigger>
+                                                                        <xf:input ref="@xml:lang"/>
+                                                                    </xf:case>
+                                                                </xf:switch>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </xf:repeat>
+                                            </fieldset>
+                                            <fieldset>
+                                                <h4>Authors / 
+                                            <xf:trigger class="inline add" appearance="minimal">
+                                                        <xf:label>
+                                                            <span class="glyphicon glyphicon-plus-sign green" aria-hidden="true"/> Add Author</xf:label>
+                                                        <xf:insert ev:event="DOMActivate" context="instance('new-bibl')//tei:author" ref="instance('new-bibl')//tei:author[last()]" at="last()" position="after" origin="instance('blank-bibl')//tei:author"/>
+                                                    </xf:trigger>
+                                                </h4>
+                                                <xf:repeat ref="instance('new-bibl')//tei:author" id="source-author">
+                                                    <div class="row">
+                                                        <div class="col-md-1">
+                                                            <xf:trigger appearance="minimal">
+                                                                <xf:label>
+                                                                    <span class="glyphicon glyphicon-remove-sign red" aria-hidden="true"/>
+                                                                </xf:label>
+                                                                <xf:delete ev:event="DOMActivate" at="index('source-author')"/>
+                                                            </xf:trigger>
+                                                            <br style="clear:both"/>
+                                                        </div>
+                                                        <div class="col-md-11">
+                                                            <xf:input ref="." class="input-reg">
+                                                                <xf:label>Author: </xf:label>
+                                                            </xf:input>
+                                                        </div>
+                                                    </div>
+                                                </xf:repeat>
+                                            </fieldset>
+                                            <fieldset>
+                                                <h4>Editors / 
+                                            <xf:trigger class="inline add" appearance="minimal">
+                                                        <xf:label>
+                                                            <span class="glyphicon glyphicon-plus-sign green" aria-hidden="true"/> Add Editor</xf:label>
+                                                        <xf:insert ev:event="DOMActivate" context="instance('new-bibl')//tei:editor" ref="instance('new-bibl')//tei:editor[last()]" at="last()" position="after" origin="instance('blank-bibl')//tei:editor"/>
+                                                    </xf:trigger>
+                                                </h4>
+                                                <xf:repeat ref="instance('new-bibl')//tei:editor" id="source-editor">
+                                                    <div class="row">
+                                                        <div class="col-md-1">
+                                                            <xf:trigger appearance="minimal">
+                                                                <xf:label>
+                                                                    <span class="glyphicon glyphicon-remove-sign red" aria-hidden="true"/>
+                                                                </xf:label>
+                                                                <xf:delete ev:event="DOMActivate" at="index('source-editor')"/>
+                                                            </xf:trigger>
+                                                            <br style="clear:both"/>
+                                                        </div>
+                                                        <div class="col-md-11">
+                                                            <xf:input ref="." class="input-reg">
+                                                                <xf:label>Editor: </xf:label>
+                                                            </xf:input>
+                                                        </div>
+                                                    </div>
+                                                </xf:repeat>
+                                            </fieldset>
+                                            <fieldset>
+                                                <h4 class="col-md-10">Cited Range / 
+                                            <xf:trigger class="inline add" appearance="minimal">
+                                                        <xf:label>
+                                                            <span class="glyphicon glyphicon-plus-sign green" aria-hidden="true"/> Insert Cited Range</xf:label>
+                                                        <xf:insert ev:event="DOMActivate" context="instance('new-bibl')//tei:title" ref="instance('new-bibl')//tei:title[last()]" at="last()" position="after" origin="instance('blank-bibl')//tei:citedRange"/>
+                                                    </xf:trigger>
+                                                </h4>
+                                                <xf:repeat ref="instance('new-bibl')//tei:citedRange" id="source-cite">
+                                                    <div class="row">
+                                                        <div class="col-md-1">
+                                                            <xf:trigger appearance="minimal">
+                                                                <xf:label>
+                                                                    <span class="glyphicon glyphicon-remove-sign red" aria-hidden="true"/>
+                                                                </xf:label>
+                                                                <xf:delete ev:event="DOMActivate" at="index('source-cite')"/>
+                                                            </xf:trigger>
+                                                            <br style="clear:both"/>
+                                                        </div>
+                                                        <div class="col-md-11">
+                                                            <xf:input ref="." class="input-reg">
+                                                                <xf:label>Cited Range: </xf:label>
+                                                            </xf:input>
+                                                        </div>
+                                                    </div>
+                                                </xf:repeat>
+                                            </fieldset>
+                                        </xf:case>
+                                    </xf:switch>
+                                </div>
+                            </div>
+                            <!-- Save/insert into main instancw -->
+                            <!--
+                            <div>
+                                <xf:trigger class="editTrigger btn" appearance="minimal">
+                                    <xf:label>Save to Record</xf:label>
+                                    <xf:insert ev:event="DOMActivate" context="instance('new')//tei:place" ref="instance('new')//tei:place/tei:bibl" at="last()" position="after" origin="instance('template')//tei:place/tei:bibl"/>
+                                </xf:trigger>
+                            </div>
+                            -->
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <xf:trigger class="btn btn-default" appearance="minimal">
+                                <xf:label>Save to record</xf:label>
+                                <xf:insert ev:event="DOMActivate" context="instance('new')//tei:place" ref="instance('new')//tei:place/child::*" at="last()" position="after" origin="instance('new-bibl')"/>
+                                <!-- Will need to add source to field that triggers the popup... not sure how to do that. -->
+                                <!-- Would be nice to have a message from successful save -->
+                            </xf:trigger>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,361 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:xf="http://www.w3.org/2002/xforms">
+    <head>
+        <title>Create/Edit Gazetteer Record</title>
+        <meta name="author" content="wsalesky at gmail.com"/>
+        <meta name="description" content="Search Controlled Vocabularies"/>
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css"/>
+        <link rel="stylesheet" type="text/css" href="../resources/css/xforms.css"/>
+        <!-- Optional theme -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css"/>
+        <!-- jquery -->
+        <script type="text/javascript" charset="utf-8" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js">/**/</script>
+        
+        <!-- Latest compiled and minified JavaScript -->
+        <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"/>
+    </head>
+    <body class="soria" style="margin:30px;">
+        <div>
+            <div style="display:none">
+                <xf:model id="m-place">
+                    <!-- INSTANCES -->
+                    <!-- Generate new in xquery, populate place-id -->
+                    <xf:instance xmlns="" id="i-ids">
+                        <list/>
+                    </xf:instance>
+                    <!-- Template used for building optional elements. May be a better way to handle that  -->
+                    <xf:instance xmlns="" id="i-new-id">
+                        <data>
+                            <id type="" uri="" num=""/>
+                        </data>
+                    </xf:instance>
+                    <!-- For submission information -->
+                    <xf:instance id="i-results">
+                        <data xmlns="">
+                            <message path="/db/apps/srophe-forms/forms/data/new.xml"/>
+                        </data>
+                    </xf:instance>
+                    
+                    <!-- Blank records with default teiHeader values prepopulated -->
+                    <xf:instance xmlns="" id="i-rec-id">
+                        <data>
+                            <id/>
+                            <type/>
+                            <num/>
+                        </data>
+                    </xf:instance>
+                    <xf:instance xmlns="" id="i-rec">
+                        <tei:TEI/>
+                    </xf:instance>
+                    
+                    <!-- Template used for building optional elements. May be a better way to handle that  -->
+                    <xf:instance xmlns="" id="i-template" src="/exist/apps/srophe-forms/forms/xml-templates/template.xml"/>
+                    <!-- Confessions for looking up confessions, perhaps should be a submodule? -->
+                    <xf:instance xmlns="" id="i-confessions" src="/exist/apps/srophe/documentation/confessions.xml"/>
+                    <xf:instance xmlns="" id="i-ctr-vals" src="/exist/apps/srophe-forms/forms/xml-templates/controlled-vals.xml"/>
+                    <!-- For inserting date attributes -->
+                    <xf:instance xmlns="" id="i-dates">
+                        <tei xmlns="http://www.tei-c.org/ns/1.0">
+                            <tei:date when="" from="" to="" notBefore="" notAfter=""/>
+                        </tei>
+                    </xf:instance>
+                    <xf:instance xmlns="" id="i-source">
+                        <tei xmlns="http://www.tei-c.org/ns/1.0">
+                            <tei:source source=""/>
+                        </tei>
+                    </xf:instance>
+                    <!-- For controlled vocab/bibl lookup  -->
+                    <xf:instance id="i-search">
+                        <root xmlns="">
+                            <q/>
+                        </root>
+                    </xf:instance>
+                    
+                    <!-- Controlled vocab  search results are loaded into this instance -->
+                    <xf:instance xmlns="http://www.tei-c.org/ns/1.0" id="i-search-results">
+                        <results>
+                            <TEI>
+                                <bibl ref="http://syriaca.org/bibl/">Enter search</bibl>
+                            </TEI>
+                        </results>
+                    </xf:instance>
+                    <!-- Controlled vocab  the search results are loaded into this instance -->
+                    <xf:instance xmlns="http://www.tei-c.org/ns/1.0" id="i-selected">
+                        <results>
+                            <TEI>
+                                <title ref=""/>
+                            </TEI>
+                        </results>
+                    </xf:instance>
+                    <!-- For selecting and populating bibl elements -->
+                    <xf:instance xmlns="" id="i-new-bibl">
+                        <bibl xmlns="http://www.tei-c.org/ns/1.0">
+                            <ptr target="http://syriaca.org/bibl/"/>
+                        </bibl>
+                    </xf:instance>
+                    <!-- Controlled vocab selected list -->
+                    <xf:instance xmlns="http://www.tei-c.org/ns/1.0" id="i-add-bibl">
+                        <bibl xml:id="bibnum">
+                            <title/>
+                            <ptr target=""/>
+                            <citedRange unit="pp"/>
+                        </bibl>
+                    </xf:instance>
+
+                    <!-- Location instance -->
+                    <xf:instance xmlns="http://www.tei-c.org/ns/1.0" id="i-location">
+                        <tei:TEI>
+                            <location type=""/>
+                            <location type="gps">
+                                <geo>LAT LONG</geo>
+                            </location>
+                            <location type="relative">
+                                <desc/>
+                            </location>
+                            <location type="nested">
+                                <region/>
+                            </location>
+                        </tei:TEI>
+                    </xf:instance>
+                    
+                    <!-- BINDINGS  -->
+                    <!-- Bind title to persName -->
+                    <xf:bind ref="instance('i-rec')//tei:publicationStmt/tei:idno[@type='URI']" calculate="concat(instance('i-rec-id')//id,'/tei')"/>
+                    <xf:bind ref="instance('i-rec')//tei:body/descendant::tei:idno[@type='URI'][1]" calculate="instance('i-rec-id')//id"/>
+                    <xf:bind ref="instance('i-rec')//tei:titleStmt/tei:title[@level='a']" calculate="instance('i-rec')//tei:place/tei:placeName[@syriaca-tags ='#syriaca-headword'][1]"/>
+                    
+                    <!-- Set required values Currently only requires persName -->
+                    <xf:bind ref="instance('i-rec')//tei:place/tei:placeName" required="true()"/>
+                    
+                    <!-- SUBMISSIONS -->
+                    <!-- On 'load form' or change? send increment id submission to xquery to icrement that id, and update the new id instance? -->
+                    <xf:submission id="s-increment-uri" resource="/exist/apps/srophe-forms/services/increment-uri.xql" ref="instance('i-new-id')" replace="instance" instance="i-sumbission" method="post">
+                        <xf:action ev:event="xforms-submit-done">
+                            <xf:send submission="s-get-ids"/>
+                        </xf:action>
+                        <xf:action ev:event="xforms-submit-error">
+                            <xf:message level="modal">Error saving new URI.</xf:message>
+                        </xf:action>
+                    </xf:submission>
+                    <!-- Recalculate the next available uri -->
+                    <xf:submission id="s-recalculate-uri" resource="/exist/apps/srophe-forms/forms/services/list-ids.xql" replace="none" method="get">
+                        <xf:action ev:event="xforms-submit-done">
+                            <xf:send submission="s-get-ids"/>
+                        </xf:action>
+                    </xf:submission>
+                    <!-- Create a new record with specified ID -->
+                    <xf:submission id="s-create-rec" ref="instance('i-rec')" replace="instance" instance="i-rec" method="get" serialization="none" mode="synchronous">
+                        <xf:resource value="concat('/exist/apps/srophe-forms/forms/services/edit-rec.xql?id=',instance('i-rec-id')//id,'&amp;type=',instance('i-rec-id')//type,'&amp;new=true')"/>
+                        <xf:action ev:event="xforms-submit-done">
+                            <xf:setvalue ref="instance('i-rec')//tei:publicationStmt/tei:date" value="now()"/>
+                            <xf:setvalue ref="instance('i-rec')//tei:revisionDesc/tei:change[1]/@when" value="now()"/>
+                            <xf:setvalue ref="instance('i-rec')//tei:person/@xml:id" value="concat('place-',instance('i-rec-id')//num)"/>
+                            <xf:setvalue ref="instance('i-rec')//tei:person/tei:persName/@xml:id" value="concat('place',instance('i-rec-id')//num,'-1')"/>
+                        </xf:action>
+                    </xf:submission>
+                    <!-- Edit an existing record -->
+                    <xf:submission id="s-edit-rec" ref="instance('i-rec')" replace="instance" instance="i-rec" method="get" serialization="none" mode="synchronous">
+                        <xf:resource value="concat('/exist/apps/srophe-forms/forms/services/edit-rec.xql?id=',instance('i-rec-id')//id,'&amp;type=',instance('i-rec-id')//type)"/>
+                        <!-- Should add a change statement via xf:insert -->
+                    </xf:submission>
+                    <!-- Get list of ids for dynamic generation of Syriaca.org ids -->
+                    <xf:submission id="s-get-ids" ref="instance('i-ids')" replace="instance" instance="i-ids" method="get" serialization="none" mode="synchronous" resource="/exist/apps/srophe-forms/forms/services/syr-ids.xml"/>
+                    
+                    <!-- Look up sources  -->
+                    <xf:submission id="s-bibl-lookup" method="get" ref="instance('i-search')" replace="instance" instance="i-search-results" serialization="none" mode="synchronous">
+                        <xf:resource value="concat('/exist/apps/srophe-forms/forms/services/controlled-vocab-search.xql?element=bibl&amp;','q=',instance('i-search')//q,'*')"/>
+                    </xf:submission>
+                    
+                    <!-- Save and view -->
+                    <xf:submission id="s-view-saved" resource="/exist/apps/srophe-forms/forms/services/submit.xql" ref="instance('i-rec')" replace="instance" instance="i-results" method="post">
+                        <xf:load ev:event="xforms-submit-done" show="new">
+                            <xf:resource value="concat('/exist/apps/srophe-forms/forms/services/view-rec.xql?path=',instance('i-results')/message/@path)"/>
+                        </xf:load>
+                    </xf:submission>
+                    
+                    <!-- Save -->
+                    <xf:submission id="s-save" resource="/exist/apps/srophe-forms/forms/services/submit.xql" ref="instance('i-rec')" replace="instance" instance="i-results" method="post">
+                        <xf:action ev:event="xforms-submit-done">
+                            <!--<xf:message ref="instance('i-results')//message"/>-->
+                            <xf:message ref="instance('i-results')//message"/>
+                        </xf:action>
+                        <xf:action ev:event="xforms-submit-error">
+                            <xf:message ref="instance('i-results')//message"/>
+                        </xf:action>
+                    </xf:submission>
+                    <xf:action ev:event="xforms-ready">
+                        <xf:send submission="s-get-ids"/>
+                    </xf:action>
+                </xf:model>
+            </div>
+            <!-- List all existing titles -->
+            <div class="section">
+                <!-- Work in progress -->
+                <!--<p class="code"><xf:output value="serialize(instance('i-rec'),'yes')"/></p>-->
+                <h1>Create/Edit New Gazetteer Record</h1>
+                <p class="text-muted">Instructions, best practices.</p>
+                <xf:output ref="instance('i-rec')//tei:place/tei:idno[@type='URI']">
+                    <xf:label>URI:</xf:label>
+                </xf:output>
+                <xf:switch id="edit-recs">
+                    <xf:case id="initialize-new-rec" selected="true()">
+                        <xf:group class="horiz-tab-menu">
+                            <xf:trigger appearance="minimal" class="tabs edit">
+                                <xf:label>Create New Record </xf:label>
+                                <xf:toggle case="create-rec" ev:event="DOMActivate"/>
+                                <xf:action ev:event="DOMActivate">
+                                    <xf:setvalue ref="instance('i-new-id')/id/@num" value="instance('i-ids')//id[@type = 'place']/@num + 1"/>
+                                    <xf:setvalue ref="instance('i-new-id')/id/@uri" value="concat('http://syriaca.org/','place','/',instance('i-ids')//id[@type = 'place']/@num + 1)"/>
+                                    <xf:setvalue ref="instance('i-new-id')/id/@type" value="'place'"/>
+                                    <xf:setvalue ref="instance('i-rec-id')//id" value="instance('i-new-id')/id/@uri"/>
+                                    <xf:setvalue ref="instance('i-rec-id')//type" value="instance('i-new-id')/id/@type"/>
+                                    <xf:setvalue ref="instance('i-rec-id')//num" value="instance('i-ids')//id[@type = instance('i-new-id')/id/@type]/@num + 1"/>
+                                    <xf:send submission="s-increment-uri"/>
+                                    <xf:send submission="s-get-ids"/>
+                                </xf:action>
+                            </xf:trigger>
+                            <xf:trigger appearance="minimal" class="tabs edit">
+                                <xf:label>Edit Record </xf:label>
+                                <xf:toggle case="edit-rec" ev:event="DOMActivate"/>
+                            </xf:trigger>
+                            <xf:submit class="btn btn-default pull-right" submission="s-recalculate-uri" appearance="minimal">
+                                <xf:label>Recalculate next available URI</xf:label>
+                                <xf:action ev:event="DOMActivate">
+                                    <xf:reset/>
+                                </xf:action>
+                            </xf:submit>
+                        </xf:group>
+                        <xf:switch id="rec-type">
+                            <xf:case id="create-rec" class="section">
+                                <br/>
+                                <xf:group ref="instance('i-new-id')/id[@type != '']">
+                                    <p class="indent">You are creating a new 
+                                        <strong>
+                                            <xf:output ref="instance('i-new-id')/id/@type"/>
+                                        </strong> with Syriaca.org URI of <strong>
+                                            <xf:output ref="instance('i-new-id')/id/@uri"/>
+                                        </strong>
+                                    </p>
+                                    <xf:trigger class="btn btn-default indent" submission="s-increment-uri" appearance="minimal">
+                                        <xf:label>Confirm</xf:label>
+                                        <!-- Trigger, saves new id to syr-ids via increment-uri.xql -->
+                                        <xf:action ev:event="DOMActivate">
+                                            <xf:send submission="s-create-rec"/>
+                                            <xf:toggle case="edit-new-rec"/>
+                                        </xf:action>
+                                    </xf:trigger>
+                                </xf:group>
+                            </xf:case>
+                            <xf:case id="edit-rec">
+                                <xf:input ref="instance('i-rec-id')//id" class="input-md top-padding">
+                                    <xf:label>ID: </xf:label>
+                                </xf:input>
+                                <xf:trigger class="btn btn-default indent" appearance="minimal">
+                                    <xf:label>Get Record</xf:label>
+                                    <!-- Trigger, saves new id to syr-ids via increment-uri.xql -->
+                                    <xf:action ev:event="DOMActivate">
+                                        <xf:send submission="s-edit-rec"/>
+                                        <xf:toggle case="edit-new-rec"/>
+                                    </xf:action>
+                                </xf:trigger>
+                            </xf:case>
+                        </xf:switch>
+                    </xf:case>
+                    <xf:case id="edit-new-rec">
+                        <xf:submit class="btn btn-default pull-right" submission="s-save" appearance="minimal">
+                            <xf:label>Save to Database</xf:label>
+                        </xf:submit>
+                        <xf:submit class="btn btn-default pull-right" submission="s-view-saved" appearance="minimal">
+                            <xf:label>View/Download XML</xf:label>
+                        </xf:submit>
+                        <xf:group ref="instance('i-rec')//tei:place">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <!-- tabs left -->
+                                    <div class="tabbable">
+                                        <ul class="nav nav-pills nav-stacked col-md-3">
+                                            <li>
+                                                <a href="#names" data-toggle="tab" class="active">Place Names</a>
+                                            </li>
+                                            <li>
+                                                <a href="#desc" data-toggle="tab">Description</a>
+                                            </li>
+                                            <li>
+                                                <a href="#details" data-toggle="tab">Details</a>
+                                            </li>
+                                            <li>
+                                                <a href="#sources" data-toggle="tab">Sources</a>
+                                            </li>
+                                        </ul>
+                                        <div class="tab-content col-md-9">
+                                            <div class="tab-pane active" id="names">
+                                                <xi:include href="../tei/placeName-el.xml"/>
+                                                <xf:trigger class="btn add" appearance="minimal">
+                                                    <xf:label>New Name</xf:label>
+                                                    <xf:insert ev:event="DOMActivate" ref="tei:placeName" at="last()" position="after" origin="instance('i-template')//tei:place/tei:placeName"/>
+                                                </xf:trigger>
+                                            </div>
+                                            <div class="tab-pane" id="desc">
+                                                <xi:include href="../tei/desc-el.xml"/>
+                                                <xf:trigger class="btn add" appearance="minimal">
+                                                    <xf:label>New Description</xf:label>
+                                                    <xf:insert ev:event="DOMActivate" ref="child::*" origin="instance('i-template')//tei:place/tei:desc"/>
+                                                </xf:trigger>
+                                            </div>
+                                            <div class="tab-pane" id="details">
+                                                <xi:include href="../tei/location-el.xml"/>
+                                                <xf:trigger class="btn add" appearance="minimal">
+                                                    <xf:label>Add Coordinates</xf:label>
+                                                    <xf:insert ev:event="DOMActivate" ref="child::*" origin="instance('i-location')//tei:location[@type = 'gps']"/>
+                                                </xf:trigger>
+                                                <xf:trigger class="btn add" appearance="minimal">
+                                                    <xf:label>Add Location Description</xf:label>
+                                                    <xf:insert ev:event="DOMActivate" ref="child::*" origin="instance('i-location')//tei:location[@type = 'relative']"/>
+                                                </xf:trigger>
+                                                <xf:trigger class="btn add" appearance="minimal">
+                                                    <xf:label>Add Nested Location</xf:label>
+                                                    <xf:insert ev:event="DOMActivate" ref="child::*" origin="instance('i-location')//tei:location[@type = 'nested']"/>
+                                                </xf:trigger>
+                                                <xi:include href="../tei/events-el.xml"/>
+                                                <xf:trigger class="btn add" appearance="minimal">
+                                                    <xf:label>New event</xf:label>
+                                                    <xf:insert ev:event="DOMActivate" ref="child::*" origin="instance('i-template')//tei:place/tei:event[1]"/>
+                                                </xf:trigger>
+                                                <xi:include href="../tei/events-attestation-el.xml"/>
+                                                <xf:trigger class="btn add" appearance="minimal">
+                                                    <xf:label>New attestation</xf:label>
+                                                    <xf:insert ev:event="DOMActivate" ref="child::*" origin="instance('i-template')//tei:place/tei:event[@type='attestation'][1]"/>
+                                                </xf:trigger>
+                                                <xi:include href="../tei/state-confession-el.xml"/>
+                                                <xf:trigger class="btn add" appearance="minimal">
+                                                    <xf:label>New confession</xf:label>
+                                                    <xf:insert ev:event="DOMActivate" ref="child::*" at="last()" position="after" origin="instance('i-template')//tei:place/tei:state[@type='confession'][1]"/>
+                                                </xf:trigger>
+                                                <xi:include href="../tei/note-el.xml"/>
+                                                <xf:trigger class="btn add" appearance="minimal">
+                                                    <xf:label>New note</xf:label>
+                                                    <xf:insert ev:event="DOMActivate" ref="child::*" origin="instance('i-template')//tei:place/tei:note"/>
+                                                </xf:trigger>
+                                            </div>
+                                            <div class="tab-pane" id="sources">
+                                                <xi:include href="../tei/bibl-el.xml"/>
+                                                <xf:trigger class="btn btn-default" appearance="minimal">
+                                                    <xf:label>New Source</xf:label>
+                                                    <xf:action ev:event="DOMActivate">
+                                                        <xf:show dialog="new-source"/>
+                                                    </xf:action>
+                                                </xf:trigger>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <xi:include href="bibl-lookup.xml"/>
+                        </xf:group>
+                    </xf:case>
+                </xf:switch>
+            </div>
+        </div>
+    </body>
+</html>

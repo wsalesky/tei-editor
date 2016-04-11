@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<TEI xmlns:math="http://www.w3.org/1998/Math/MathML" xmlns="http://www.tei-c.org/ns/1.0" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:svg="http://www.w3.org/2000/svg" xml:lang="en">
+<TEI xmlns="http://www.tei-c.org/ns/1.0" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:svg="http://www.w3.org/2000/svg" xmlns:math="http://www.w3.org/1998/Math/MathML" xml:lang="en">
     <teiHeader>
         <fileDesc>
             <titleStmt>
@@ -55,26 +55,28 @@
     <text>
         <body>
             <listPlace>
-                <place xml:id="place-XXX" type="TYPE">
+                <place xml:id="place-XXX" type="">
                     <!--Must include 1 english name place type -->
-                    <placeName xml:id="nameXXX-X" xml:lang="en/syr/syr-Syrj/ar" source="bibrefs"/>
+                    <placeName xml:id="nameXXX-X" xml:lang="" source="" syriaca-tags="#syriaca-headword"/>
                     <!-- additional descriptions -->
-                    <desc xml:lang="en/syr/ar">
-                        <quote source="#bibXXX-X"/>
+                    <desc xml:lang="">
+                        <quote source=""/>
                     </desc>
-                    <!-- Optional location text and gps -->
-                    <location type="gps" source="#bibXXX-X">
-                        <geo>LAT LONG</geo>
-                    </location>
-                    <!-- much trickier -->
-                    <location type="relative" subtype="quote" source="#bibXX-X">
-                        <desc/>
+                    <note type=""/>
+                    <location type="">
+                        <!--<desc/>-->
                         <!--
                            <measure unit="days-journey" quantity="5">five day journey</measure>
                         <offset>eastward from</offset>
                         <placeName ref="http://syriaca.org/place/18">Aleppo</placeName>
                         -->
                     </location>
+                    <!-- Optional location text and gps -->
+                    <location type="gps">
+                        <geo>LAT LONG</geo>
+                    </location>
+                    <!-- much trickier -->
+                    
                     <!-- events bind computed dates at creation able to insert place names -->
                     <event source="#bibXX-X">
                         <p xml:lang=""/>

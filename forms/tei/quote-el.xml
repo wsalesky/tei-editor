@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<div xmlns="http://www.w3.org/1999/xhtml" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:xf="http://www.w3.org/2002/xforms">
+    <xf:group ref="tei:quote[self::*/@source]">
+        <xi:include href="source-attr.xml"/>
+        <!-- 
+            If source then use tei:quote, if no source then use use ??  
+            done by trigger?
+        -->
+        <xf:textarea ref="." class="large"/>
+    </xf:group>
+</div>
