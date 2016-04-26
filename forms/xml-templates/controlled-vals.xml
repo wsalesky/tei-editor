@@ -69,4 +69,19 @@
         <type>prologue</type>
         <type>record-description</type>
     </notes>
+    <persName>
+        <sort>1</sort>
+        <sort>2</sort>
+        <sort>3</sort>
+        <sort>4</sort>
+        <sort>5</sort>
+        <addName>
+            <type>family</type>
+            <type>untagged-title</type>
+        </addName>
+        <roleName>
+            <type>office</type>
+            <type>saint</type>
+        </roleName>
+    </persName>
 </TEI>

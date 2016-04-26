@@ -167,9 +167,14 @@
                 <person xml:id="person-x">
                     <persName xml:id="namex-1" xml:lang=""/>
                     <persName xml:id="namex-1" xml:lang="" source="" syriaca-tags="#syriaca-headword">
+                        <roleName/>
+                        <forename/>
+                        <addName/>
+                    </persName>
+                    <persName xml:id="namex-1" xml:lang="" source="" syriaca-tags="#syriaca-headword">
                         <roleName type="" sort=""/>
-                        <forename sort=""/>
-                        <addName type=""/>
+                        <forename type="" sort=""/>
+                        <addName type="" sort=""/>
                     </persName>
                     <note/>
                     <note>

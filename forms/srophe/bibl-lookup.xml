@@ -40,7 +40,7 @@
                         <xf:label>Edit Selection </xf:label>
                         <xf:toggle case="edit-selected" ev:event="DOMActivate"/>
                     </xf:trigger>
-                    <xf:trigger class="btn add" appearance="minimal">
+                    <xf:trigger class="btn save" appearance="minimal">
                         <xf:label> Add to Document </xf:label>
                         <xf:insert ev:event="DOMActivate" ref="tei:bibl" origin="instance('i-add-bibl')"/>
                         <xf:message level="modal" ev:event="DOMActivate">Saved!</xf:message>

@@ -10,14 +10,19 @@ declare namespace output = "http://www.w3.org/2010/xslt-xquery-serialization";
 declare option output:method "xml";
 declare option output:media-type "text/xml";
 
-(:~
-let $data-root := xs:anyURI('/db/apps/srophe-forms/forms/data/')
-let $cache := 'change value to force refresh: 344' 
-let $results := request:get-data()     
-let $file-name := concat('new', '.xml')
-let $path-name := concat($data-root, $file-name)
-'/db/apps/srophe-data/data/'
-:)
+(: Parse xml strings in text nodes into xml elements :)
+declare function local:parse-text($nodes as node()*) as item()* {
+    for $node in $nodes
+    return
+    typeswitch($node)
+        case text() return 
+            parse-xml-fragment($node)
+        default return local:passthru($node)
+};
+
+declare function local:passthru($node as node()*) as item()* {
+    element {name($node)} {($node/@*, local:parse-text($node/node()))}
+};
 
 let $data-root := '/db/apps/srophe-data/data/'
 let $cache := 'change value to force refresh: 344' 
@@ -45,7 +50,7 @@ let $path-name :=
 return 
         try {
         <data code="200">
-            <message path="{$path-name}">New document saved: { xmldb:store($collection, $file-name, $results)}</message>
+            <message path="{$path-name}">New document saved: { xmldb:store($collection, $file-name, local:parse-text($results/*))}</message>
         </data>
         } catch * {
         <data code="500">

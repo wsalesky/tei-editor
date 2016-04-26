@@ -29,7 +29,7 @@ declare variable $data-root := '/db/apps/srophe-data/' ;
 declare function local:build-path() as xs:string*{
 if($element = 'persName') then concat("collection('",$data-root,"data/persons/tei')//tei:persName[parent::tei:person][ft:query(.,'",$q,"',local:options())]") 
 else if($element = 'placeName') then concat("collection('",$data-root,"data/places/tei')//tei:placeName[parent::tei:place][ft:query(.,'",$q,"',local:options())]")
-else if($element = 'bibl') then concat("collection('",$data-root,"data/bibl/tei')//tei:title[ancestor::tei:body][ft:query(.,'",$q,"',local:options())]")
+else if($element = 'bibl') then concat("collection('",$data-root,"data/bibl/tei')//tei:title[parent::tei:titleStmt][ft:query(.,'",$q,"',local:options())]")
 else if($element != '') then concat("collection('",$data-root,"data')//tei:",$element,"[ft:query(.,'",$q,"',local:options())]")
 else concat("collection('",$data-root,"data')//child::*",$element,"[ft:query(.,'",$q,"',local:options())]")
 };

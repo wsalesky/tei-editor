@@ -16,7 +16,8 @@
         <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"/>
     </head>
     <body class="soria" style="margin:30px;">
-        <div>
+        <xi:include href="navbar.xml"/>
+        <div id="main">
             <div style="display:none">
                 <xf:model id="m-place">
                     <!-- INSTANCES -->
@@ -33,7 +34,7 @@
                     <!-- For submission information -->
                     <xf:instance id="i-results">
                         <data xmlns="">
-                            <message path="/db/apps/srophe-forms/forms/data/new.xml"/>
+                            <message/>
                         </data>
                     </xf:instance>
                     
@@ -130,12 +131,12 @@
                     
                     <!-- SUBMISSIONS -->
                     <!-- On 'load form' or change? send increment id submission to xquery to icrement that id, and update the new id instance? -->
-                    <xf:submission id="s-increment-uri" resource="/exist/apps/srophe-forms/services/increment-uri.xql" ref="instance('i-new-id')" replace="instance" instance="i-sumbission" method="post">
+                    <xf:submission id="s-increment-uri" resource="/exist/apps/srophe-forms/forms/services/increment-uri.xql" ref="instance('i-new-id')" replace="instance" instance="i-results" method="post">
                         <xf:action ev:event="xforms-submit-done">
                             <xf:send submission="s-get-ids"/>
                         </xf:action>
                         <xf:action ev:event="xforms-submit-error">
-                            <xf:message level="modal">Error saving new URI.</xf:message>
+                            <xf:message level="modal" ref="instance('i-results')"/>
                         </xf:action>
                     </xf:submission>
                     <!-- Recalculate the next available uri -->
@@ -211,8 +212,6 @@
                                     <xf:setvalue ref="instance('i-rec-id')//id" value="instance('i-new-id')/id/@uri"/>
                                     <xf:setvalue ref="instance('i-rec-id')//type" value="instance('i-new-id')/id/@type"/>
                                     <xf:setvalue ref="instance('i-rec-id')//num" value="instance('i-ids')//id[@type = instance('i-new-id')/id/@type]/@num + 1"/>
-                                    <xf:send submission="s-increment-uri"/>
-                                    <xf:send submission="s-get-ids"/>
                                 </xf:action>
                             </xf:trigger>
                             <xf:trigger appearance="minimal" class="tabs edit">
@@ -241,6 +240,8 @@
                                         <xf:label>Confirm</xf:label>
                                         <!-- Trigger, saves new id to syr-ids via increment-uri.xql -->
                                         <xf:action ev:event="DOMActivate">
+                                            <xf:send submission="s-increment-uri"/>
+                                            <xf:send submission="s-get-ids"/>
                                             <xf:send submission="s-create-rec"/>
                                             <xf:toggle case="edit-new-rec"/>
                                         </xf:action>
@@ -263,10 +264,10 @@
                         </xf:switch>
                     </xf:case>
                     <xf:case id="edit-new-rec">
-                        <xf:submit class="btn btn-default pull-right" submission="s-save" appearance="minimal">
+                        <xf:submit class="btn btn-default pull-right save" submission="s-save" appearance="minimal">
                             <xf:label>Save to Database</xf:label>
                         </xf:submit>
-                        <xf:submit class="btn btn-default pull-right" submission="s-view-saved" appearance="minimal">
+                        <xf:submit class="btn btn-default pull-right download" submission="s-view-saved" appearance="minimal">
                             <xf:label>View/Download XML</xf:label>
                         </xf:submit>
                         <xf:group ref="instance('i-rec')//tei:place">
@@ -290,6 +291,7 @@
                                         </ul>
                                         <div class="tab-content col-md-9">
                                             <div class="tab-pane active" id="names">
+                                                <h3>Names</h3>
                                                 <xi:include href="../tei/placeName-el.xml"/>
                                                 <xf:trigger class="btn add" appearance="minimal">
                                                     <xf:label>New Name</xf:label>
@@ -297,6 +299,7 @@
                                                 </xf:trigger>
                                             </div>
                                             <div class="tab-pane" id="desc">
+                                                <h3>Descriptions</h3>
                                                 <xi:include href="../tei/desc-el.xml"/>
                                                 <xf:trigger class="btn add" appearance="minimal">
                                                     <xf:label>New Description</xf:label>
@@ -304,6 +307,7 @@
                                                 </xf:trigger>
                                             </div>
                                             <div class="tab-pane" id="details">
+                                                <h3>Place Details</h3>
                                                 <xi:include href="../tei/location-el.xml"/>
                                                 <xf:trigger class="btn add" appearance="minimal">
                                                     <xf:label>Add Coordinates</xf:label>
@@ -339,6 +343,7 @@
                                                 </xf:trigger>
                                             </div>
                                             <div class="tab-pane" id="sources">
+                                                <h3>Sources</h3>
                                                 <xi:include href="../tei/bibl-el.xml"/>
                                                 <xf:trigger class="btn btn-default" appearance="minimal">
                                                     <xf:label>New Source</xf:label>
