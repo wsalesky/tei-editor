@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:xf="http://www.w3.org/2002/xforms">
+    <head>
+        <title>Inner &amp; Outer Set Node</title>
+        <xf:model>
+            <xf:instance>
+                <data xmlns="">Test2
+                    <item>a</item>
+                </data>
+            </xf:instance>
+        </xf:model>
+    </head>
+    <body style="margin: 0.5em;">
+        <h1>Inner &amp; Outer Set Node</h1>
+        <p>The instance currently looks like this:</p>
+        <pre>
+            <xf:output value="serialize(.)" mediatype="text/plain"/>
+        </pre>
+        <hr/>
+        <p>These buttons apply the <code>setnode</code> action to the instance root (<code>.</code>):</p>
+        <xf:trigger>
+            <xf:label>Set Inner to '&lt;item&gt;b&lt;/item&gt;'</xf:label>
+            <xf:setnode ref="." ev:event="DOMActivate" inner="'&lt;item&gt;b&lt;/item&gt;'"/>
+        </xf:trigger>
+        <xf:trigger>
+            <xf:label>Set Outer to '&lt;item&gt;c&lt;/item&gt;'</xf:label>
+            <xf:setnode ref="." ev:event="DOMActivate" outer="'&lt;item&gt;c&lt;/item&gt;'"/>
+        </xf:trigger>
+        <hr/>
+        <p>These buttons apply the <code>setnode</code> action to the child of the instance root (<code>./item</code>):</p>
+        <xf:trigger>
+            <xf:label>Set Inner to '&lt;item&gt;d&lt;/item&gt;'</xf:label>
+            <xf:setnode ref="./item" ev:event="DOMActivate" inner="'&lt;item&gt;d&lt;/item&gt;'"/>
+        </xf:trigger>
+        <xf:trigger>
+            <xf:label>Set Outer to '&lt;item&gt;e&lt;/item&gt;'</xf:label>
+            <xf:setnode ref="./item" ev:event="DOMActivate" outer="'&lt;item&gt;e&lt;/item&gt;'"/>
+        </xf:trigger>
+    </body>
+</html>
